@@ -9,6 +9,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
         purple: {
           50: '#faf5ff',
           100: '#f3e8ff',

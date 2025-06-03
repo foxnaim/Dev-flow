@@ -1,59 +1,73 @@
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import {
+  Calendar,
+  CheckSquare,
+  Code,
+  FileText,
+  Moon,
+  Sun,
+} from 'lucide-react';
+import clsx from 'clsx';
 import { useTheme } from 'next-themes';
-import { Calendar, CheckSquare, Code, FileText, Moon, Sun } from 'lucide-react';
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 const navItems = [
-  { href: '/', icon: CheckSquare, label: 'Tasks' },
-  { href: '/snippets', icon: Code, label: 'Snippets' },
-  { href: '/calendar', icon: Calendar, label: 'Calendar' },
-  { href: '/notes', icon: FileText, label: 'Notes' },
+  { href: '/', icon: CheckSquare },
+  { href: '/snippets', icon: Code },
+  { href: '/calendar', icon: Calendar },
+  { href: '/notes', icon: FileText },
 ];
 
 export default function Layout({ children }: LayoutProps) {
+  const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
 
-  return (
-    <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
-        <div className="p-4">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">DevFlow</h1>
-        </div>
-        <nav className="mt-4">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex items-center px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              <item.icon className="w-5 h-5 mr-3" />
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="absolute bottom-4 left-4">
-          <button
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700"
-          >
-            {theme === 'dark' ? (
-              <Sun className="w-5 h-5 text-gray-200" />
-            ) : (
-              <Moon className="w-5 h-5 text-gray-700" />
-            )}
-          </button>
-        </div>
-      </aside>
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-      {/* Main content */}
-      <main className="flex-1 overflow-auto">
-        {children}
-      </main>
+  if (!mounted) return null;
+
+  return (
+    <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900">
+      <main className="flex-1 pb-20 md:pb-0">{children}</main>
+
+      <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-gray-900 dark:bg-black text-white rounded-full px-6 py-3 flex justify-around items-center gap-6 z-50 shadow-lg w-[calc(100%-2rem)] max-w-sm">
+        {navItems.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={clsx(
+              'p-2 rounded-full transition-colors duration-200',
+              pathname === item.href
+                ? 'text-purple-400 bg-purple-900/30'
+                : 'text-gray-400 hover:text-gray-200'
+            )}
+            aria-label={item.href === '/' ? 'Tasks' : item.href.substring(1).charAt(0).toUpperCase() + item.href.substring(2)}
+          >
+            <item.icon className="w-6 h-6" />
+          </Link>
+        ))}
+
+        <button
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          className="p-2 rounded-full transition-colors duration-200 text-gray-400 hover:text-gray-200"
+          aria-label="Toggle theme"
+        >
+          {theme === 'dark' ? (
+            <Sun className="w-6 h-6" />
+          ) : (
+            <Moon className="w-6 h-6" />
+          )}
+        </button>
+      </nav>
+
     </div>
   );
 }

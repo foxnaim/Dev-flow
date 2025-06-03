@@ -1,10 +1,11 @@
 import { Task } from '../types/task';
 import { Tag, Calendar, Clock } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 // Пропсы для карточки задачи
 interface TaskCardProps {
   task: Task;
-  onDragStart: (e: React.DragEvent, task: Task) => void;
+  onDragStart: (e: any, task: Task) => void;
 }
 
 // Цвета для разных приоритетов
@@ -16,7 +17,12 @@ const priorityColors = {
 
 export default function TaskCard({ task, onDragStart }: TaskCardProps) {
   return (
-    <div
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 10 }}
+      transition={{ duration: 0.3 }}
       draggable
       onDragStart={(e) => onDragStart(e, task)}
       className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 mb-2 cursor-move hover:shadow-md transition-all duration-200"
@@ -64,6 +70,6 @@ export default function TaskCard({ task, onDragStart }: TaskCardProps) {
           {new Date(task.dueDate).toLocaleDateString('ru-RU')}
         </div>
       )}
-    </div>
+    </motion.div>
   );
 } 

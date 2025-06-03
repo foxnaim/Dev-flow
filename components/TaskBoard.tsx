@@ -5,6 +5,7 @@ import TaskCard from './TaskCard';
 import Modal from './Modal';
 import NewTaskForm from './NewTaskForm';
 import { Plus } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 // Определение колонок для канбан-доски
 const columns: { id: TaskStatus; title: string }[] = [
@@ -57,7 +58,7 @@ export default function TaskBoard() {
       </div>
 
       {/* Сетка колонок для задач */}
-      <div className="grid grid-cols-3 gap-6">
+      <motion.div layout className="grid grid-cols-3 gap-6">
         {columns.map((column) => (
           <div
             key={column.id}
@@ -83,7 +84,7 @@ export default function TaskBoard() {
             </div>
           </div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Модальное окно для новой задачи */}
       <Modal

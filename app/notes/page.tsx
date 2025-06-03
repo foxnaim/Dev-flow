@@ -5,6 +5,7 @@ import Layout from '../../components/Layout';
 import { useNotesStore } from '../../store/useNotesStore';
 import { Note, NoteFormData } from '../../types/notes';
 import NoteModal from '../../components/NoteModal';
+import { motion } from 'framer-motion';
 
 export default function NotesPage() {
   // Получаем функции и состояние из хранилища заметок
@@ -24,7 +25,12 @@ export default function NotesPage() {
 
   return (
     <Layout>
-      <div className="p-6">
+      <motion.div 
+        className="p-6"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         {/* Заголовок страницы и кнопка создания */}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Заметки</h1>
@@ -92,7 +98,7 @@ export default function NotesPage() {
           onSubmit={handleSubmit}
           note={selectedNote || undefined}
         />
-      </div>
+      </motion.div>
     </Layout>
   );
 } 

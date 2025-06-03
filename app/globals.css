@@ -3,8 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
+  --background: var(--pastel-cream); /* Пастельный кремовый фон для светлой темы */
+  --foreground: var(--dark-text); /* Темный текст для светлой темы */
+  --pastel-cream: #FAF9F6; /* Пастельный кремовый фон */
+  --pastel-pink: #FFB6C1; /* Нежно-розовый акцент */
+  --pastel-blue: #ADD8E6; /* Пастельно-голубой акцент */
+  --pastel-lilac: #E6E6FA; /* Мягкий сиреневый */
+  --dark-text: #4A5568; /* Темный текст */
 }
 
 .dark {
@@ -14,4 +19,21 @@
 
 body {
   @apply bg-background text-foreground;
+}
+
+.bg-pastel-cream {
+  background-color: var(--pastel-cream);
+}
+
+.bg-pastel-pink {
+  background-color: var(--pastel-pink);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.task-card-animation {
+  animation: fadeIn 0.5s ease-out;
 }

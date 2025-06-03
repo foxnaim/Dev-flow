@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useTheme } from 'next-themes';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Пропсы для компонента Layout
 interface LayoutProps {
@@ -39,8 +40,19 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900">
-      {/* Основной контент */}
-      <main className="flex-1 pb-20 md:pb-0">{children}</main>
+      {/* Основной контент с анимацией перехода */}
+      <AnimatePresence mode="wait">
+        <motion.main 
+          key={pathname} // Ключ для AnimatePresence, меняется при смене маршрута
+          className="flex-1 pb-20 md:pb-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {children}
+        </motion.main>
+      </AnimatePresence>
 
       {/* Нижняя навигационная панель */}
       <nav className="fixed bottom-7 left-1/2 -translate-x-1/2 border-blue-200 bg-blue-50  dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-300 text-white rounded-full px-6 py-3 flex justify-around items-center gap-6 z-50 shadow-lg w-[calc(100%-2rem)] max-w-sm">

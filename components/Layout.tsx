@@ -38,7 +38,7 @@ export default function Layout({ children }: LayoutProps) {
     <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900">
       <main className="flex-1 pb-20 md:pb-0">{children}</main>
 
-      <nav className="fixed bottom-7 left-1/2 -translate-x-1/2 border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-300 text-white rounded-full px-6 py-3 flex justify-around items-center gap-6 z-50 shadow-lg w-[calc(100%-2rem)] max-w-sm">
+      <nav className="fixed bottom-7 left-1/2 -translate-x-1/2 border-blue-200 bg-blue-50  dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-300 text-white rounded-full px-6 py-3 flex justify-around items-center gap-6 z-50 shadow-lg w-[calc(100%-2rem)] max-w-sm">
         {navItems.map((item) => (
           <Link
             key={item.href}

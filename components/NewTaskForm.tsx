@@ -22,7 +22,7 @@ export default function NewTaskForm({ onClose }: NewTaskFormProps) {
       description,
       priority,
       tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
-      status: 'backlog',
+      status: 'todo',
       dueDate: dueDate ? new Date(dueDate) : undefined,
     });
 

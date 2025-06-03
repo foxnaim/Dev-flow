@@ -46,7 +46,7 @@ export default function TaskBoard() {
     <div className="p-6">
       {/* Заголовок доски и кнопка добавления задачи */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Канбан-доска</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">DevFlow</h1>
         <button
           onClick={() => setIsNewTaskModalOpen(true)}
           className="flex items-center px-6 py-2 rounded-full border border-purple-700 bg-purple-100 text-purple-700 font-medium shadow-md hover:bg-purple-200 transition-colors duration-200 focus:outline-none"

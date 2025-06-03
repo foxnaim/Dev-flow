@@ -12,10 +12,12 @@ import {
 import clsx from 'clsx';
 import { useTheme } from 'next-themes';
 
+// Пропсы для компонента Layout
 interface LayoutProps {
   children: ReactNode;
 }
 
+// Навигационные элементы с иконками и метками
 const navItems = [
   { href: '/', icon: CheckSquare, label: 'Задачи' },
   { href: '/snippets', icon: Code, label: 'Сниппеты' },
@@ -28,6 +30,7 @@ export default function Layout({ children }: LayoutProps) {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
 
+  // Предотвращаем гидратацию с неправильной темой
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -36,9 +39,12 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900">
+      {/* Основной контент */}
       <main className="flex-1 pb-20 md:pb-0">{children}</main>
 
+      {/* Нижняя навигационная панель */}
       <nav className="fixed bottom-7 left-1/2 -translate-x-1/2 border-blue-200 bg-blue-50  dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-300 text-white rounded-full px-6 py-3 flex justify-around items-center gap-6 z-50 shadow-lg w-[calc(100%-2rem)] max-w-sm">
+        {/* Навигационные ссылки */}
         {navItems.map((item) => (
           <Link
             key={item.href}
@@ -55,6 +61,7 @@ export default function Layout({ children }: LayoutProps) {
           </Link>
         ))}
 
+        {/* Кнопка переключения темы */}
         <button
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           className="p-2 rounded-full transition-colors duration-200 text-gray-400 hover:text-gray-200"
@@ -67,7 +74,6 @@ export default function Layout({ children }: LayoutProps) {
           )}
         </button>
       </nav>
-
     </div>
   );
 }

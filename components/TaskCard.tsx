@@ -25,7 +25,7 @@ export default function TaskCard({ task, onDragStart }: TaskCardProps) {
       transition={{ duration: 0.3 }}
       draggable
       onDragStart={(e) => onDragStart(e, task)}
-      className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 mb-2 cursor-move hover:shadow-md transition-all duration-200"
+      className="bg-pastel-pink dark:bg-gray-800 rounded-xl border border-pastel-lilac dark:border-gray-700 p-4 mb-2 cursor-move hover:shadow-md transition-all duration-200 text-dark-text dark:text-white"
     >
       {/* Заголовок задачи */}
       <h3 className="font-medium text-gray-900 dark:text-white mb-2">{task.title}</h3>

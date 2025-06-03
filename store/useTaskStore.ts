@@ -1,17 +1,26 @@
 import { create } from 'zustand';
 import { Task, TaskStatus } from '../types/task';
 
-interface TaskStore {
+// Интерфейс состояния хранилища задач
+interface TaskState {
+  // Список всех задач
   tasks: Task[];
+  // Добавление новой задачи
   addTask: (task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  // Обновление существующей задачи
   updateTask: (id: string, task: Partial<Task>) => void;
+  // Удаление задачи
   deleteTask: (id: string) => void;
-  moveTask: (taskId: string, newStatus: TaskStatus) => void;
+  // Перемещение задачи между статусами
+  moveTask: (id: string, newStatus: TaskStatus) => void;
 }
 
-export const useTaskStore = create<TaskStore>((set) => ({
+// Создание хранилища задач с помощью Zustand
+export const useTaskStore = create<TaskState>((set) => ({
+  // Список задач
   tasks: [],
   
+  // Добавление новой задачи
   addTask: (task) => set((state) => ({
     tasks: [...state.tasks, {
       ...task,
@@ -21,6 +30,7 @@ export const useTaskStore = create<TaskStore>((set) => ({
     }],
   })),
 
+  // Обновление существующей задачи
   updateTask: (id, updatedTask) => set((state) => ({
     tasks: state.tasks.map((task) =>
       task.id === id
@@ -29,15 +39,15 @@ export const useTaskStore = create<TaskStore>((set) => ({
     ),
   })),
 
+  // Удаление задачи
   deleteTask: (id) => set((state) => ({
     tasks: state.tasks.filter((task) => task.id !== id),
   })),
 
-  moveTask: (taskId, newStatus) => set((state) => ({
+  // Перемещение задачи между статусами
+  moveTask: (id, newStatus) => set((state) => ({
     tasks: state.tasks.map((task) =>
-      task.id === taskId
-        ? { ...task, status: newStatus, updatedAt: new Date() }
-        : task
+      task.id === id ? { ...task, status: newStatus, updatedAt: new Date() } : task
     ),
   })),
 }));

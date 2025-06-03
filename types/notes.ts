@@ -1,3 +1,4 @@
+// Интерфейс заметки
 export interface Note {
   id: string;
   title: string;
@@ -8,6 +9,7 @@ export interface Note {
   color?: string;
 }
 
+// Интерфейс данных формы для создания/редактирования заметки
 export interface NoteFormData {
   title: string;
   content: string;

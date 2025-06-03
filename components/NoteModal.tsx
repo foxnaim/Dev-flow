@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Note, NoteFormData } from '../types/notes';
 
+// Пропсы для модального окна заметки
 interface NoteModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -9,12 +10,14 @@ interface NoteModalProps {
 }
 
 export default function NoteModal({ isOpen, onClose, onSubmit, note }: NoteModalProps) {
+  // Состояние формы
   const [formData, setFormData] = useState<NoteFormData>({
     title: '',
     content: '',
     tags: [],
   });
 
+  // Обновляем форму при изменении заметки
   useEffect(() => {
     if (note) {
       setFormData({
@@ -33,6 +36,7 @@ export default function NoteModal({ isOpen, onClose, onSubmit, note }: NoteModal
 
   if (!isOpen) return null;
 
+  // Обработчик отправки формы
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
@@ -40,14 +44,18 @@ export default function NoteModal({ isOpen, onClose, onSubmit, note }: NoteModal
   };
 
   return (
+    // Затемненный фон
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+      {/* Модальное окно */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl">
         <div className="p-6">
+          {/* Заголовок модального окна */}
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
             {note ? 'Редактировать заметку' : 'Новая заметка'}
           </h2>
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
+              {/* Поле заголовка */}
               <div>
                 <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Заголовок
@@ -61,6 +69,7 @@ export default function NoteModal({ isOpen, onClose, onSubmit, note }: NoteModal
                   required
                 />
               </div>
+              {/* Поле содержания */}
               <div>
                 <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Содержание
@@ -75,6 +84,7 @@ export default function NoteModal({ isOpen, onClose, onSubmit, note }: NoteModal
                 />
               </div>
             </div>
+            {/* Кнопки управления */}
             <div className="mt-6 flex justify-end space-x-3">
               <button
                 type="button"

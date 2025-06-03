@@ -1,17 +1,15 @@
 export type Priority = 'low' | 'medium' | 'high';
 
-export type TaskStatus = 'backlog' | 'in-progress' | 'done';
+export type TaskStatus = 'todo' | 'in-progress' | 'done';
 
 export interface Task {
   id: string;
   title: string;
-  description?: string;
   status: TaskStatus;
-  priority: Priority;
-  tags: string[];
-  createdAt: Date;
-  updatedAt: Date;
+  description?: string;
   dueDate?: Date;
+  priority?: 'low' | 'medium' | 'high';
+  tags?: string[];
 }
 
 export interface TaskColumn {

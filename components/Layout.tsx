@@ -17,10 +17,10 @@ interface LayoutProps {
 }
 
 const navItems = [
-  { href: '/', icon: CheckSquare },
-  { href: '/snippets', icon: Code },
-  { href: '/calendar', icon: Calendar },
-  { href: '/notes', icon: FileText },
+  { href: '/', icon: CheckSquare, label: 'Задачи' },
+  { href: '/snippets', icon: Code, label: 'Сниппеты' },
+  { href: '/calendar', icon: Calendar, label: 'Календарь' },
+  { href: '/notes', icon: FileText, label: 'Заметки' },
 ];
 
 export default function Layout({ children }: LayoutProps) {
@@ -49,7 +49,7 @@ export default function Layout({ children }: LayoutProps) {
                 ? 'bg-purple-100 text-purple-700'
                 : 'text-gray-400 hover:text-gray-200'
             )}
-            aria-label={item.href === '/' ? 'Tasks' : item.href.substring(1).charAt(0).toUpperCase() + item.href.substring(2)}
+            aria-label={item.label}
           >
             <item.icon className="w-6 h-6" />
           </Link>
@@ -58,7 +58,7 @@ export default function Layout({ children }: LayoutProps) {
         <button
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           className="p-2 rounded-full transition-colors duration-200 text-gray-400 hover:text-gray-200"
-          aria-label="Toggle theme"
+          aria-label="Переключить тему"
         >
           {theme === 'dark' ? (
             <Sun className="w-6 h-6" />

@@ -40,12 +40,12 @@ export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTask
     onClose();
   };
 
-  const inputClasses = "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-pastel-pink dark:bg-gray-700 dark:text-white";
+  const inputClasses = "w-full px-3 py-2 border border-border rounded-md bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label htmlFor="title" className="block text-sm font-medium text-foreground mb-1">
           Название
         </label>
         <input
@@ -53,13 +53,13 @@ export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTask
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          required
           className={inputClasses}
+          required
         />
       </div>
 
       <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label htmlFor="description" className="block text-sm font-medium text-foreground mb-1">
           Описание
         </label>
         <textarea
@@ -72,7 +72,7 @@ export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTask
       </div>
 
       <div>
-        <label htmlFor="priority" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label htmlFor="priority" className="block text-sm font-medium text-foreground mb-1">
           Приоритет
         </label>
         <select
@@ -88,7 +88,7 @@ export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTask
       </div>
 
       <div>
-        <label htmlFor="tags" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label htmlFor="tags" className="block text-sm font-medium text-foreground mb-1">
           Теги (через запятую)
         </label>
         <input
@@ -97,12 +97,12 @@ export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTask
           value={tags}
           onChange={(e) => setTags(e.target.value)}
           className={inputClasses}
-          placeholder="например: срочное, важное"
+          placeholder="например: важное, срочное"
         />
       </div>
 
       <div>
-        <label htmlFor="dueDate" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label htmlFor="dueDate" className="block text-sm font-medium text-foreground mb-1">
           Срок выполнения
         </label>
         <input
@@ -114,17 +114,17 @@ export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTask
         />
       </div>
 
-      <div className="flex justify-end space-x-3">
+      <div className="flex justify-end gap-2">
         <button
           type="button"
           onClick={onClose}
-          className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
+          className="px-4 py-2 text-sm font-medium text-secondary-text hover:text-foreground"
         >
           Отмена
         </button>
         <button
           type="submit"
-          className="px-4 py-2 text-sm font-medium text-white bg-gray-300 hover:bg-gray-400 rounded-md"
+          className="px-4 py-2 text-sm font-medium text-white bg-accent hover:bg-accent/90 rounded-md"
         >
           {existingTask ? 'Сохранить' : 'Создать'}
         </button>

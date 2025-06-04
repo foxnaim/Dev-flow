@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { Note, NoteFormData } from '../types/notes';
+import { v4 as uuidv4 } from 'uuid';
 
 interface NotesState {
   notes: Note[];
@@ -12,7 +13,7 @@ export const useNotesStore = create<NotesState>((set) => ({
   notes: [],
   addNote: (noteData) => {
     const newNote: Note = {
-      id: crypto.randomUUID(),
+      id: uuidv4(),
       ...noteData,
       createdAt: new Date(),
       updatedAt: new Date(),

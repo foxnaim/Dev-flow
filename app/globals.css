@@ -3,57 +3,45 @@
 @tailwind utilities;
 
 :root {
-  --background: var(--pastel-cream); /* Пастельный кремовый фон для светлой темы */
-  --foreground: var(--dark-text); /* Темный текст для светлой темы */
-  --pastel-cream: #FAF9F6; /* Пастельный кремовый фон */
-  --pastel-pink: #FFB6C1; /* Нежно-розовый акцент */
-  --pastel-blue: #ADD8E6; /* Пастельно-голубой акцент */
-  --pastel-lilac: #E6E6FA; /* Мягкий сиреневый */
-  --dark-text: #4A5568; /* Темный текст */
+  /* Светлая тема */
+  --background: #F9FAFB;
+  --foreground: #111827;
+  --surface: #FFFFFF;
+  --accent: #6366F1;
+  --secondary-text: #6B7280;
+  --border: #E5E7EB;
+  --error: #EF4444;
+
   /* Дополнительные переменные для календаря */
-  --calendar-border-light: rgba(173, 216, 230, 0.5); /* Полупрозрачный пастельно-голубой для границ */
+  --calendar-border-light: var(--border); /* Границы календаря */
   --calendar-border-dark: rgba(74, 85, 104, 0.3); /* Полупрозрачный темный для границ в темной теме */
-  --calendar-header-background: var(--pastel-lilac); /* Сиреневый фон для заголовков */
-  --calendar-off-range-background: rgba(250, 249, 246, 0.5); /* Полупрозрачный кремовый для дней вне месяца */
+  --calendar-header-background: var(--surface); /* Фон заголовков календаря */
+  --calendar-off-range-background: var(--background); /* Фон дней вне месяца */
 }
 
 .dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  --calendar-border-light: rgba(74, 85, 104, 0.5); /* Границы в темной теме */
-  --calendar-header-background: #555; /* Фон заголовков в темной теме */
-  --calendar-off-range-background: rgba(60, 60, 60, 0.5); /* Фон дней вне месяца в темной теме */
+  /* Темная тема */
+  --background: #1E1E2F;
+  --foreground: #EDEDED;
+  --surface: #2A2A40;
+  --accent: #7C3AED;
+  --secondary-text: #9CA3AF;
+  --border: #2A2A40;
+  --error: #EF4444;
+
+  /* Дополнительные переменные для календаря */
+  --calendar-border-light: var(--border); /* Границы календаря */
+  --calendar-header-background: var(--surface); /* Фон заголовков календаря */
+  --calendar-off-range-background: var(--surface); /* Фон дней вне месяца */
 }
 
 body {
-  @apply text-foreground;
-  background: linear-gradient(180deg, #e0e0e0, #f0f0f0, #d0d0d0);
-  background-size: 400% 400%;
-  animation: gradientAnimation 15s ease infinite;
-}
-
-@keyframes gradientAnimation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  @apply text-foreground bg-background;
+  background: none;
 }
 
 h1, h2, h3 {
   font-family: var(--font-montserrat);
-}
-
-.bg-pastel-cream {
-  background-color: var(--pastel-cream);
-}
-
-.bg-pastel-pink {
-  background-color: var(--pastel-pink);
 }
 
 @keyframes fadeIn {
@@ -68,14 +56,10 @@ h1, h2, h3 {
 /* React Big Calendar styles overrides */
 .rbc-calendar {
   font-family: var(--font-nunito), sans-serif;
-  /* Используем светлую тему по умолчанию, можно добавить темную тему через классы */
-  border: 1px solid var(--calendar-border-light); /* Мягкая рамка для всего календаря */
+  border: 1px solid var(--border);
   border-radius: 8px;
-  overflow: hidden; /* Скрываем выходящие за границы элементы */
-}
-
-.dark .rbc-calendar {
-  border-color: var(--calendar-border-dark);
+  overflow: hidden;
+  background-color: var(--surface);
 }
 
 .rbc-toolbar {
@@ -84,20 +68,15 @@ h1, h2, h3 {
   align-items: center;
   margin-bottom: 20px;
   padding: 10px;
-  background-color: var(--pastel-cream); /* Используем кремовый фон из палитры */
-  border-bottom: 1px solid var(--calendar-border-light); /* Граница под тулбаром */
-}
-
-.dark .rbc-toolbar {
-  background-color: #333; /* Пример темного фона */
-  border-bottom-color: var(--calendar-border-dark);
+  background-color: var(--surface);
+  border-bottom: 1px solid var(--border);
 }
 
 .rbc-btn-group button {
   padding: 6px 12px;
-  border: 1px solid var(--dark-text); /* Граница кнопок */
-  background-color: var(--pastel-cream); /* Фон кнопок */
-  color: var(--dark-text); /* Цвет текста кнопок */
+  border: 1px solid var(--border);
+  background-color: var(--surface);
+  color: var(--foreground);
   border-radius: 4px;
   margin: 0 2px;
   cursor: pointer;
@@ -105,80 +84,38 @@ h1, h2, h3 {
   font-size: 0.9em;
 }
 
-.dark .rbc-btn-group button {
-  border-color: #555;
-  background-color: #444;
-  color: #ddd;
-}
-
 .rbc-btn-group button:hover {
-  background-color: var(--pastel-pink); /* Цвет при наведении */
+  background-color: var(--accent);
   color: white;
-  border-color: var(--pastel-pink);
-}
-
-.dark .rbc-btn-group button:hover {
-  background-color: #666;
-  color: white;
-  border-color: #666;
+  border-color: var(--accent);
 }
 
 .rbc-btn-group button.rbc-active {
-  background-color: var(--pastel-pink); /* Активная кнопка */
+  background-color: var(--accent);
   color: white;
-  border-color: var(--pastel-pink);
-}
-
-.dark .rbc-btn-group button.rbc-active {
-  background-color: #666;
-  color: white;
-  border-color: #666;
+  border-color: var(--accent);
 }
 
 .rbc-header {
-  background-color: var(--calendar-header-background); /* Фон заголовков дней */
-  color: var(--dark-text); /* Цвет текста заголовков дней */
+  background-color: var(--surface);
+  color: var(--foreground);
   padding: 8px 0;
-  border-bottom: 1px solid var(--calendar-border-light); /* Граница под заголовками */
-  border-right: 1px solid var(--calendar-border-light); /* Граница справа между заголовками */
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
   text-align: center;
   font-weight: bold;
   font-size: 0.9em;
 }
 
-.dark .rbc-header {
-  background-color: var(--calendar-header-background);
-  color: #eee;
-  border-bottom-color: var(--calendar-border-dark);
-  border-right-color: var(--calendar-border-dark);
-}
-
-.rbc-month-view, .rbc-time-view, .rbc-agenda-view {
-  /* Уже задано на .rbc-calendar */
-}
-
 .rbc-day-bg {
-  border-right: 1px solid var(--calendar-border-light); /* Граница справа между днями */
-}
-
-.dark .rbc-day-bg {
-  border-right-color: var(--calendar-border-dark);
+  border-right: 1px solid var(--border);
 }
 
 .rbc-off-range-bg {
-  background-color: var(--calendar-off-range-background); /* Фон дней вне текущего месяца */
-}
-
-.dark .rbc-off-range-bg {
-  background-color: var(--calendar-off-range-background);
-}
-
-.rbc-row-segment > a {
-    /* Стили для ссылки события, если применимо */
+  background-color: var(--background);
 }
 
 .rbc-event {
-  /* Цвета задаются через eventPropGetter в CalendarPage.tsx */
   border-radius: 4px;
   padding: 2px 5px;
   cursor: pointer;
@@ -187,71 +124,44 @@ h1, h2, h3 {
   transition: opacity 0.2s ease-in-out;
 }
 
-.dark .rbc-event {
-  color: #fff; /* Цвет текста событий в темной теме */
-}
-
 .rbc-event:hover {
   opacity: 1;
 }
 
 .rbc-slot-selecting {
-  background-color: rgba(var(--pastel-pink), 0.2); /* Цвет выделения при выборе диапазона */
+  background-color: var(--accent);
+  opacity: 0.2;
 }
 
 .rbc-today {
-  background-color: rgba(var(--pastel-blue), 0.3); /* Пастельно-голубой фон для сегодняшнего дня */
-}
-
-.dark .rbc-today {
-  background-color: rgba(85, 85, 85, 0.5); /* Фон сегодняшнего дня в темной теме */
+  background-color: var(--accent);
+  opacity: 0.3;
 }
 
 .rbc-highlight {
-  background-color: rgba(var(--pastel-lilac), 0.4); /* Цвет выделения при наведении или выборе */
-}
-
-.dark .rbc-highlight {
-  background-color: rgba(102, 102, 102, 0.5); /* Цвет выделения в темной теме */
+  background-color: var(--accent);
+  opacity: 0.4;
 }
 
 .rbc-date-cell {
   padding: 8px;
   text-align: right;
   font-size: 0.9em;
-  border-right: 1px solid var(--calendar-border-light); /* Граница справа для ячеек дат */
-  border-bottom: 1px solid var(--calendar-border-light); /* Граница снизу для ячеек дат */
-}
-
-.dark .rbc-date-cell {
-  border-right-color: var(--calendar-border-dark);
-  border-bottom-color: var(--calendar-border-dark);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  color: var(--foreground);
 }
 
 .rbc-now {
-  font-weight: bold; /* Выделяем сегодняшний день */
-  color: var(--dark-text); /* Цвет текста сегодняшней даты */
+  font-weight: bold;
+  color: var(--accent);
 }
 
-.dark .rbc-now {
-   color: #eee;
-}
-
-.rbc-month-row {
-  /* Граница снизу уже задана на .rbc-date-cell */
-}
-
-/* Удаляем лишние границы, которые могут дублироваться */
-.rbc-header:last-child {
-    border-right: none;
-}
-
-.rbc-day-bg:last-child {
-    border-right: none;
-}
-
+/* Удаляем лишние границы */
+.rbc-header:last-child,
+.rbc-day-bg:last-child,
 .rbc-date-cell:last-child {
-     border-right: none;
+  border-right: none;
 }
 
 .rbc-date-cell:parent > .rbc-row-segment > .rbc-event-content {

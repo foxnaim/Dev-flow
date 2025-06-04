@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { Task, TaskStatus } from '../types/task';
+import { v4 as uuidv4 } from 'uuid';
 
 // Интерфейс состояния хранилища задач
 interface TaskState {
@@ -24,7 +25,7 @@ export const useTaskStore = create<TaskState>((set) => ({
   addTask: (task) => set((state) => ({
     tasks: [...state.tasks, {
       ...task,
-      id: crypto.randomUUID(),
+      id: uuidv4(),
       createdAt: new Date(),
       updatedAt: new Date(),
     }],

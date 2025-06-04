@@ -8,6 +8,7 @@ import {
   FileText,
   Moon,
   Sun,
+  MessageSquare,
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useTheme } from 'next-themes';
@@ -21,7 +22,7 @@ interface LayoutProps {
 // Навигационные элементы с иконками и метками
 const navItems = [
   { href: '/', icon: CheckSquare, label: 'Задачи' },
-  { href: '/snippets', icon: Code, label: 'Сниппеты' },
+  { href: '/chat', icon: MessageSquare, label: 'Чат' },
   { href: '/calendar', icon: Calendar, label: 'Календарь' },
   { href: '/notes', icon: FileText, label: 'Заметки' },
 ];
@@ -55,7 +56,7 @@ export default function Layout({ children }: LayoutProps) {
       </AnimatePresence>
 
       {/* Нижняя навигационная панель */}
-      <nav className="fixed bottom-7 left-1/2 -translate-x-1/2 border-blue-200 bg-blue-50  dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-300 text-white rounded-full px-6 py-3 flex justify-around items-center gap-6 z-50 shadow-lg w-[calc(100%-2rem)] max-w-sm">
+      <nav className="fixed bottom-7 left-1/2 -translate-x-1/2 border border-border bg-surface text-foreground rounded-full px-6 py-3 flex justify-around items-center gap-6 z-50 shadow-lg w-[calc(100%-2rem)] max-w-sm">
         {/* Навигационные ссылки */}
         {navItems.map((item) => (
           <Link
@@ -64,8 +65,8 @@ export default function Layout({ children }: LayoutProps) {
             className={clsx(
               'p-2 rounded-full transition-colors duration-200',
               pathname === item.href
-                ? 'bg-purple-100 text-purple-700'
-                : 'text-gray-400 hover:text-gray-200'
+                ? 'bg-accent text-white'
+                : 'text-secondary-text hover:text-foreground'
             )}
             aria-label={item.label}
           >
@@ -76,7 +77,7 @@ export default function Layout({ children }: LayoutProps) {
         {/* Кнопка переключения темы */}
         <button
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          className="p-2 rounded-full transition-colors duration-200 text-gray-400 hover:text-gray-200"
+          className="p-2 rounded-full transition-colors duration-200 text-secondary-text hover:text-foreground"
           aria-label="Переключить тему"
         >
           {theme === 'dark' ? (

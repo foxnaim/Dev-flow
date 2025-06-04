@@ -60,60 +60,66 @@ export default function TaskCard({ task, onDragStart, onDelete, onChangeStatus, 
       exit={{ opacity: 0, y: -20 }}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 mb-3 cursor-move relative"
+        className="bg-surface text-foreground rounded-lg shadow-sm p-4 mb-3 cursor-move relative border border-gray-400 border-opacity-50"
         draggable
         onDragStart={(e: React.DragEvent<HTMLDivElement>) => onDragStart(e, task)}
       >
         <div className="flex justify-between items-start mb-2">
-          <h3 className="font-medium text-gray-900 dark:text-white">{task.title}</h3>
+          <h3 className="font-medium text-foreground">{task.title}</h3>
           <div className="relative">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+              className="p-1 hover:bg-surface/80 rounded"
             >
-              <MoreVertical className="w-4 h-4 text-gray-500" />
+              <MoreVertical className="w-4 h-4 text-secondary-text" />
             </button>
             
             {isMenuOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-10">
+              <div className="absolute right-0 mt-2 w-48 bg-surface rounded-md shadow-lg z-10 border border-border">
                 <div className="py-1">
                   <button
                     onClick={() => {
                       onEdit(task);
                       setIsMenuOpen(false);
                     }}
-                    className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 w-full"
+                    className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-surface/80 w-full"
                   >
                     <Edit className="w-4 h-4 mr-2" />
                     Редактировать
                   </button>
-                  <button
-                    onClick={() => handleStatusChange('к выполнению')}
-                    className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 w-full"
-                  >
-                    <CheckSquare className="w-4 h-4 mr-2" />
-                    К выполнению
-                  </button>
-                  <button
-                    onClick={() => handleStatusChange('в процессе')}
-                    className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 w-full"
-                  >
-                    <CheckSquare className="w-4 h-4 mr-2" />
-                    В процессе
-                  </button>
-                  <button
-                    onClick={() => handleStatusChange('выполнено')}
-                    className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 w-full"
-                  >
-                    <CheckSquare className="w-4 h-4 mr-2" />
-                    Выполнено
-                  </button>
+                  {task.status !== 'к выполнению' && (
+                    <button
+                      onClick={() => handleStatusChange('к выполнению')}
+                      className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-surface/80 w-full"
+                    >
+                      <CheckSquare className="w-4 h-4 mr-2" />
+                      К выполнению
+                    </button>
+                  )}
+                  {task.status !== 'в процессе' && (
+                    <button
+                      onClick={() => handleStatusChange('в процессе')}
+                      className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-surface/80 w-full"
+                    >
+                      <CheckSquare className="w-4 h-4 mr-2" />
+                      В процессе
+                    </button>
+                  )}
+                  {task.status !== 'выполнено' && (
+                    <button
+                      onClick={() => handleStatusChange('выполнено')}
+                      className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-surface/80 w-full"
+                    >
+                      <CheckSquare className="w-4 h-4 mr-2" />
+                      Выполнено
+                    </button>
+                  )}
                   <button
                     onClick={() => {
                       onDelete(task.id);
                       setIsMenuOpen(false);
                     }}
-                    className="flex items-center px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 w-full"
+                    className="flex items-center px-4 py-2 text-sm text-error hover:bg-surface/80 w-full"
                   >
                     <Trash2 className="w-4 h-4 mr-2" />
                     Удалить
@@ -125,14 +131,14 @@ export default function TaskCard({ task, onDragStart, onDelete, onChangeStatus, 
         </div>
 
         {task.description && (
-          <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">{task.description}</p>
+          <p className="text-sm text-secondary-text mb-2">{task.description}</p>
         )}
 
         <div className="flex flex-wrap gap-2 mt-2">
           {task.tags?.map((tag) => (
             <span
               key={tag}
-              className="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
+              className="px-2 py-1 text-xs rounded-full bg-surface text-secondary-text border border-border"
             >
               {tag}
             </span>
@@ -149,7 +155,7 @@ export default function TaskCard({ task, onDragStart, onDelete, onChangeStatus, 
         </div>
 
         {task.dueDate && (
-          <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+          <div className="mt-2 text-xs text-secondary-text">
             Срок: {new Date(task.dueDate).toLocaleDateString('ru-RU')}
           </div>
         )}

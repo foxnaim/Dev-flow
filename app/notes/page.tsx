@@ -7,11 +7,18 @@ import { Note, NoteFormData } from '../../types/notes';
 import NoteModal from '../../components/NoteModal';
 import { motion } from 'framer-motion';
 
+// Импорт иконки из react-icons
+import { FiTrash2 } from 'react-icons/fi';
+import { Edit } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
+
 export default function NotesPage() {
   // Получаем функции и состояние из хранилища заметок
   const { notes, addNote, updateNote, deleteNote } = useNotesStore();
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNewNoteModalOpen, setIsNewNoteModalOpen] = useState(false);
+  const [editingNote, setEditingNote] = useState<Note | null>(null);
 
   // Обработчик создания/обновления заметки
   const handleSubmit = (data: NoteFormData) => {
@@ -33,13 +40,10 @@ export default function NotesPage() {
       >
         {/* Заголовок страницы и кнопка создания */}
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Заметки</h1>
+          <h1 className="text-2xl font-bold text-foreground">Заметки</h1>
           <button
-            onClick={() => {
-              setSelectedNote(null);
-              setIsModalOpen(true);
-            }}
-            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            onClick={() => setIsNewNoteModalOpen(true)}
+            className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent/90"
           >
             Новая заметка
           </button>
@@ -54,49 +58,52 @@ export default function NotesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Карточки заметок */}
             {notes.map((note) => (
-              <div
+              <motion.div
                 key={note.id}
-                className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 hover:shadow-lg transition-shadow cursor-pointer"
-                onClick={() => {
-                  setSelectedNote(note);
-                  setIsModalOpen(true);
-                }}
+                layout
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="bg-surface rounded-lg shadow-sm border border-border p-4"
               >
-                {/* Заголовок заметки */}
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{note.title}</h3>
-                {/* Предпросмотр содержания */}
-                <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3">
-                  {note.content}
-                </p>
-                {/* Информация о заметке и кнопка удаления */}
-                <div className="mt-4 flex justify-between items-center">
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
-                    {new Date(note.updatedAt).toLocaleDateString('ru-RU')}
-                  </span>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      deleteNote(note.id);
-                    }}
-                    className="text-red-500 hover:text-red-600"
-                  >
-                    Удалить
-                  </button>
+                <div className="flex justify-between items-start mb-2">
+                  <h2 className="text-lg font-semibold text-foreground">{note.title}</h2>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        setEditingNote(note);
+                        setIsNewNoteModalOpen(true);
+                      }}
+                      className="p-1 hover:bg-surface/80 rounded"
+                    >
+                      <Edit className="w-4 h-4 text-secondary-text" />
+                    </button>
+                    <button
+                      onClick={() => deleteNote(note.id)}
+                      className="p-1 hover:bg-surface/80 rounded"
+                    >
+                      <Trash2 className="w-4 h-4 text-error" />
+                    </button>
+                  </div>
                 </div>
-              </div>
+                <p className="text-secondary-text">{note.content}</p>
+                <div className="mt-4 text-xs text-secondary-text">
+                  {new Date(note.createdAt).toLocaleDateString('ru-RU')}
+                </div>
+              </motion.div>
             ))}
           </div>
         )}
 
         {/* Модальное окно для создания/редактирования заметки */}
         <NoteModal
-          isOpen={isModalOpen}
+          isOpen={isNewNoteModalOpen}
           onClose={() => {
-            setIsModalOpen(false);
+            setIsNewNoteModalOpen(false);
             setSelectedNote(null);
           }}
           onSubmit={handleSubmit}
-          note={selectedNote || undefined}
+          note={editingNote || undefined}
         />
       </motion.div>
     </Layout>

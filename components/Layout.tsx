@@ -39,7 +39,7 @@ export default function Layout({ children }: LayoutProps) {
   if (!mounted) return null;
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="flex flex-col min-h-screen dark:bg-gray-900">
       {/* Основной контент с анимацией перехода */}
       <AnimatePresence mode="wait">
         <motion.main 

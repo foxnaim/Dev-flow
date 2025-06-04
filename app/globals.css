@@ -10,11 +10,19 @@
   --pastel-blue: #ADD8E6; /* Пастельно-голубой акцент */
   --pastel-lilac: #E6E6FA; /* Мягкий сиреневый */
   --dark-text: #4A5568; /* Темный текст */
+  /* Дополнительные переменные для календаря */
+  --calendar-border-light: rgba(173, 216, 230, 0.5); /* Полупрозрачный пастельно-голубой для границ */
+  --calendar-border-dark: rgba(74, 85, 104, 0.3); /* Полупрозрачный темный для границ в темной теме */
+  --calendar-header-background: var(--pastel-lilac); /* Сиреневый фон для заголовков */
+  --calendar-off-range-background: rgba(250, 249, 246, 0.5); /* Полупрозрачный кремовый для дней вне месяца */
 }
 
 .dark {
   --background: 222.2 84% 4.9%;
   --foreground: 210 40% 98%;
+  --calendar-border-light: rgba(74, 85, 104, 0.5); /* Границы в темной теме */
+  --calendar-header-background: #555; /* Фон заголовков в темной теме */
+  --calendar-off-range-background: rgba(60, 60, 60, 0.5); /* Фон дней вне месяца в темной теме */
 }
 
 body {
@@ -55,4 +63,217 @@ h1, h2, h3 {
 
 .task-card-animation {
   animation: fadeIn 0.5s ease-out;
+}
+
+/* React Big Calendar styles overrides */
+.rbc-calendar {
+  font-family: var(--font-nunito), sans-serif;
+  /* Используем светлую тему по умолчанию, можно добавить темную тему через классы */
+  border: 1px solid var(--calendar-border-light); /* Мягкая рамка для всего календаря */
+  border-radius: 8px;
+  overflow: hidden; /* Скрываем выходящие за границы элементы */
+}
+
+.dark .rbc-calendar {
+  border-color: var(--calendar-border-dark);
+}
+
+.rbc-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: var(--pastel-cream); /* Используем кремовый фон из палитры */
+  border-bottom: 1px solid var(--calendar-border-light); /* Граница под тулбаром */
+}
+
+.dark .rbc-toolbar {
+  background-color: #333; /* Пример темного фона */
+  border-bottom-color: var(--calendar-border-dark);
+}
+
+.rbc-btn-group button {
+  padding: 6px 12px;
+  border: 1px solid var(--dark-text); /* Граница кнопок */
+  background-color: var(--pastel-cream); /* Фон кнопок */
+  color: var(--dark-text); /* Цвет текста кнопок */
+  border-radius: 4px;
+  margin: 0 2px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-size: 0.9em;
+}
+
+.dark .rbc-btn-group button {
+  border-color: #555;
+  background-color: #444;
+  color: #ddd;
+}
+
+.rbc-btn-group button:hover {
+  background-color: var(--pastel-pink); /* Цвет при наведении */
+  color: white;
+  border-color: var(--pastel-pink);
+}
+
+.dark .rbc-btn-group button:hover {
+  background-color: #666;
+  color: white;
+  border-color: #666;
+}
+
+.rbc-btn-group button.rbc-active {
+  background-color: var(--pastel-pink); /* Активная кнопка */
+  color: white;
+  border-color: var(--pastel-pink);
+}
+
+.dark .rbc-btn-group button.rbc-active {
+  background-color: #666;
+  color: white;
+  border-color: #666;
+}
+
+.rbc-header {
+  background-color: var(--calendar-header-background); /* Фон заголовков дней */
+  color: var(--dark-text); /* Цвет текста заголовков дней */
+  padding: 8px 0;
+  border-bottom: 1px solid var(--calendar-border-light); /* Граница под заголовками */
+  border-right: 1px solid var(--calendar-border-light); /* Граница справа между заголовками */
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+.dark .rbc-header {
+  background-color: var(--calendar-header-background);
+  color: #eee;
+  border-bottom-color: var(--calendar-border-dark);
+  border-right-color: var(--calendar-border-dark);
+}
+
+.rbc-month-view, .rbc-time-view, .rbc-agenda-view {
+  /* Уже задано на .rbc-calendar */
+}
+
+.rbc-day-bg {
+  border-right: 1px solid var(--calendar-border-light); /* Граница справа между днями */
+}
+
+.dark .rbc-day-bg {
+  border-right-color: var(--calendar-border-dark);
+}
+
+.rbc-off-range-bg {
+  background-color: var(--calendar-off-range-background); /* Фон дней вне текущего месяца */
+}
+
+.dark .rbc-off-range-bg {
+  background-color: var(--calendar-off-range-background);
+}
+
+.rbc-row-segment > a {
+    /* Стили для ссылки события, если применимо */
+}
+
+.rbc-event {
+  /* Цвета задаются через eventPropGetter в CalendarPage.tsx */
+  border-radius: 4px;
+  padding: 2px 5px;
+  cursor: pointer;
+  font-size: 0.8em;
+  opacity: 0.9;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.dark .rbc-event {
+  color: #fff; /* Цвет текста событий в темной теме */
+}
+
+.rbc-event:hover {
+  opacity: 1;
+}
+
+.rbc-slot-selecting {
+  background-color: rgba(var(--pastel-pink), 0.2); /* Цвет выделения при выборе диапазона */
+}
+
+.rbc-today {
+  background-color: rgba(var(--pastel-blue), 0.3); /* Пастельно-голубой фон для сегодняшнего дня */
+}
+
+.dark .rbc-today {
+  background-color: rgba(85, 85, 85, 0.5); /* Фон сегодняшнего дня в темной теме */
+}
+
+.rbc-highlight {
+  background-color: rgba(var(--pastel-lilac), 0.4); /* Цвет выделения при наведении или выборе */
+}
+
+.dark .rbc-highlight {
+  background-color: rgba(102, 102, 102, 0.5); /* Цвет выделения в темной теме */
+}
+
+.rbc-date-cell {
+  padding: 8px;
+  text-align: right;
+  font-size: 0.9em;
+  border-right: 1px solid var(--calendar-border-light); /* Граница справа для ячеек дат */
+  border-bottom: 1px solid var(--calendar-border-light); /* Граница снизу для ячеек дат */
+}
+
+.dark .rbc-date-cell {
+  border-right-color: var(--calendar-border-dark);
+  border-bottom-color: var(--calendar-border-dark);
+}
+
+.rbc-now {
+  font-weight: bold; /* Выделяем сегодняшний день */
+  color: var(--dark-text); /* Цвет текста сегодняшней даты */
+}
+
+.dark .rbc-now {
+   color: #eee;
+}
+
+.rbc-month-row {
+  /* Граница снизу уже задана на .rbc-date-cell */
+}
+
+/* Удаляем лишние границы, которые могут дублироваться */
+.rbc-header:last-child {
+    border-right: none;
+}
+
+.rbc-day-bg:last-child {
+    border-right: none;
+}
+
+.rbc-date-cell:last-child {
+     border-right: none;
+}
+
+.rbc-date-cell:parent > .rbc-row-segment > .rbc-event-content {
+    /* Стили для контента события внутри ячейки даты, если нужно */
+}
+
+.rbc-week-bg {
+    /* Фон недели */
+}
+
+.rbc-axis-c, .rbc-axis-c > a {
+    /* Стили для временной оси */
+}
+
+.rbc-time-column .rbc-timeslots-group {
+    /* Группы временных слотов */
+}
+
+.rbc-time-gutter, .rbc-header-gutter {
+    /* Пространство для временной оси и заголовка */
+}
+
+.rbc-rtl {
+    /* Стили для RTL */
 }

@@ -1,81 +1,25 @@
 'use client';
-
 import Layout from '../../components/Layout';
-// import { useCalendarStore } from '../../store/useCalendarStore'; // Удаляем, так как больше не используем
 import { useState } from 'react';
-
-// Импорт стилей react-big-calendar (обязательно!) // Удаляем, так как больше не используем
-// import 'react-big-calendar/lib/css/react-big-calendar.css';
-
-// Удаляем импорты react-big-calendar и date-fns, кроме ru и startOfToday если нужно для других целей (пока оставим startOfToday на всякий случай)
-// import { Calendar, dateFnsLocalizer, View } from 'react-big-calendar';
 import { format } from 'date-fns/format'; // Возможно, понадобится для форматирования даты
-// import { parse } from 'date-fns/parse';
-// import { startOfWeek } from 'date-fns/startOfWeek';
-// import { getDay } from 'date-fns/getDay';
 import { ru } from 'date-fns/locale/ru';
-// import { startOfToday } from 'date-fns'; // Оставляем, если понадобится дата сегодня
-
-// Импорт useTaskStore
 import { useTaskStore } from '../../store/useTaskStore';
 import { Task } from '../../types/task';
-// Импорт компонента Modal (оставим, если решим показывать детали в модальном окне)
 import Modal from '../../components/Modal';
-
 import { motion, AnimatePresence } from 'framer-motion';
+import { Nunito } from "next/font/google"; // Import Nunito font
 
-// Настройка date-fns localizer для react-big-calendar // Удаляем
-// const locales = { 'ru': ru };
-// const localizer = dateFnsLocalizer({
-//   format,
-//   parse,
-//   startOfWeek,
-//   getDay,
-//   locales,
-// });
-
-// Удаляем интерфейс CalendarEvent, если он больше не нужен
-// interface CalendarEvent {
-//   title: string;
-//   start: Date;
-//   end: Date;
-//   allDay?: boolean;
-//   resource?: Task;
-// }
+const nunito = Nunito({ subsets: ["cyrillic"], variable: '--font-nunito' }); // Define Nunito font
 
 export default function CalendarPage() {
   // Получаем задачи из хранилища задач
   const { tasks } = useTaskStore();
   // Состояние для выбранной задачи для попапа (оставляем для модального окна)
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  
-  // Удаляем состояния date, view и обработчики навигации/вида
-  // const [date, setDate] = useState(startOfToday());
-  // const [view, setView] = useState<View>('agenda');
-  // const handleNavigate = (newDate: Date) => { setDate(newDate); };
-  // const handleView = (newView: View) => { setView(newView); };
-
-  // Удаляем преобразование задач в события календаря, работаем напрямую с задачами
-  // const tasksAsEvents: CalendarEvent[] = tasks
-  //   .filter(task => task.dueDate)
-  //   .map(task => ({
-  //     title: task.title,
-  //     start: new Date(task.dueDate!),
-  //     end: new Date(task.dueDate!),
-  //     allDay: true,
-  //     resource: task,
-  //   }));
-
-  // Объединяем события из хранилища календаря и задачи с dueDate // Удаляем
-  // const allEvents = [...calendarEvents, ...tasksAsEvents];
-
-  // Удаляем консоль лог событий
-  // console.log('Tasks converted to Calendar Events:', tasksAsEvents); // Логируем события для отладки
-
 
   return (
     <Layout>
-      <div className="p-6">
+      <div className={`p-6 ${nunito.variable}`}> {/* Apply Nunito variable class */}
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Список всех задач</h1> {/* Изменяем заголовок */}
         
         {/* Заменяем компонент Calendar на список задач */}
@@ -101,8 +45,8 @@ export default function CalendarPage() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
-                    layout // Ensures smooth reordering if tasks are added/removed
-                  > {/* Добавляем клик для модального окна */}
+                    layout
+                  >
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{task.title}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{task.dueDate ? format(new Date(task.dueDate), 'dd.MM.yyyy', { locale: ru }) : 'Не указан'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{task.priority || 'Не указан'}</td>
@@ -119,11 +63,6 @@ export default function CalendarPage() {
           )}
 
         </div>
-
-        {/* TODO: Добавить возможность drag-and-drop (требует дополнительных библиотек и логики) */}
-        {/* TODO: Добавить попап с деталями задачи при клике */}
-
-        {/* Модальное окно для деталей задачи (оставляем) */}
         <Modal
           isOpen={!!selectedTask}
           onClose={() => setSelectedTask(null)}
@@ -136,7 +75,6 @@ export default function CalendarPage() {
               <p><strong>Приоритет:</strong> {selectedTask.priority || 'Не указан'}</p>
               <p><strong>Теги:</strong> {selectedTask.tags?.join(', ') || 'Нет тегов'}</p>
               <p><strong>Статус:</strong> {selectedTask.status}</p>
-               {/* TODO: Добавить кнопки для редактирования/удаления из попапа */}
             </div>
           )}
         </Modal>

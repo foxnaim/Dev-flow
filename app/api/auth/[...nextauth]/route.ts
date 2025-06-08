@@ -1,5 +1,5 @@
 import NextAuth from 'next-auth';
-import TelegramProvider from 'next-auth/providers/telegram';
+import TelegramProvider from '@/lib/telegram-provider';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 

@@ -26,8 +26,8 @@ export const useTaskStore = create<TaskState>((set) => ({
     tasks: [...state.tasks, {
       ...task,
       id: uuidv4(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }],
   })),
 
@@ -35,7 +35,7 @@ export const useTaskStore = create<TaskState>((set) => ({
   updateTask: (id, updatedTask) => set((state) => ({
     tasks: state.tasks.map((task) =>
       task.id === id
-        ? { ...task, ...updatedTask, updatedAt: new Date() }
+        ? { ...task, ...updatedTask, updatedAt: new Date().toISOString() }
         : task
     ),
   })),
@@ -48,7 +48,7 @@ export const useTaskStore = create<TaskState>((set) => ({
   // Перемещение задачи между статусами
   moveTask: (id, newStatus) => set((state) => ({
     tasks: state.tasks.map((task) =>
-      task.id === id ? { ...task, status: newStatus, updatedAt: new Date() } : task
+      task.id === id ? { ...task, status: newStatus, updatedAt: new Date().toISOString() } : task
     ),
   })),
-}));
+})); 

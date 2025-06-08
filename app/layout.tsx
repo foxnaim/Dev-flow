@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
+import GlobalLoading from './global-loading';
+import { AuthProvider } from './providers';
 
 const montserrat = Montserrat({ subsets: ["cyrillic"], variable: '--font-montserrat' });
 
@@ -18,9 +20,12 @@ export default function RootLayout({
   return (
     <html lang="ru-en" suppressHydrationWarning>
       <body className={`${montserrat.variable}`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <GlobalLoading />
+            {children}
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

@@ -26,8 +26,13 @@ export default function TaskBoard() {
 
   // Загружаем задачи при монтировании компонента
   useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
+    console.log('Fetching tasks...');
+    fetchTasks().then(() => {
+      console.log('Tasks loaded:', tasks);
+    }).catch(error => {
+      console.error('Error loading tasks:', error);
+    });
+  }, [fetchTasks, tasks]);
 
   // Обработчик начала перетаскивания
   const handleDragStart = (e: React.DragEvent, task: Task) => {

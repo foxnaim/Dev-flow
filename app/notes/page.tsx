@@ -1,11 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout';
 import { useNotesStore } from '../../store/useNotesStore';
 import { Note, NoteFormData } from '../../types/notes';
 import NoteModal from '../../components/NoteModal';
 import { motion } from 'framer-motion';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 // Импорт иконки из react-icons
 import { FiTrash2 } from 'react-icons/fi';
@@ -13,22 +15,61 @@ import { Edit } from 'lucide-react';
 import { Trash2 } from 'lucide-react';
 
 export default function NotesPage() {
-  // Получаем функции и состояние из хранилища заметок
-  const { notes, addNote, updateNote, deleteNote } = useNotesStore();
-  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const { notes, addNote, updateNote, deleteNote, fetchNotes, isLoading, error } = useNotesStore();
   const [isNewNoteModalOpen, setIsNewNoteModalOpen] = useState(false);
   const [editingNote, setEditingNote] = useState<Note | null>(null);
 
-  // Обработчик создания/обновления заметки
-  const handleSubmit = (data: NoteFormData) => {
-    if (selectedNote) {
-      updateNote(selectedNote.id, data);
-    } else {
-      addNote(data);
+  useEffect(() => {
+    if (status === 'authenticated') {
+      fetchNotes().catch(error => {
+        console.error('Error loading notes:', error);
+      });
+    } else if (status === 'unauthenticated') {
+      router.push('/auth/signin');
     }
-    setSelectedNote(null);
+  }, [status, fetchNotes, router]);
+
+  // Обработчик создания/обновления заметки
+  const handleSubmit = async (data: NoteFormData) => {
+    try {
+      if (editingNote) {
+        await updateNote(editingNote.id, data);
+      } else {
+        await addNote(data);
+      }
+      setEditingNote(null);
+    } catch (error) {
+      console.error('Error saving note:', error);
+    }
   };
+
+  if (status === 'loading' || isLoading) {
+    return (
+      <Layout>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto"></div>
+            <p className="mt-4 text-foreground">Загрузка...</p>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-red-500 text-2xl mb-4">Ошибка</div>
+            <p className="text-foreground">{error}</p>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -42,7 +83,10 @@ export default function NotesPage() {
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-foreground">Заметки</h1>
           <button
-            onClick={() => setIsNewNoteModalOpen(true)}
+            onClick={() => {
+              setEditingNote(null);
+              setIsNewNoteModalOpen(true);
+            }}
             className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent/90"
           >
             Новая заметка
@@ -100,7 +144,7 @@ export default function NotesPage() {
           isOpen={isNewNoteModalOpen}
           onClose={() => {
             setIsNewNoteModalOpen(false);
-            setSelectedNote(null);
+            setEditingNote(null);
           }}
           onSubmit={handleSubmit}
           note={editingNote || undefined}

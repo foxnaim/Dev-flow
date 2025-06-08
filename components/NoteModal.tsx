@@ -18,9 +18,9 @@ export default function NoteModal({ isOpen, onClose, onSubmit, note }: NoteModal
     tags: [],
   });
 
-  // Обновляем форму при изменении заметки
+  // Обновляем форму при изменении заметки или открытии/закрытии модального окна
   useEffect(() => {
-    if (note) {
+    if (note && isOpen) {
       setFormData({
         title: note.title,
         content: note.content,
@@ -33,15 +33,19 @@ export default function NoteModal({ isOpen, onClose, onSubmit, note }: NoteModal
         tags: [],
       });
     }
-  }, [note]);
+  }, [note, isOpen]);
 
   if (!isOpen) return null;
 
   // Обработчик отправки формы
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
-    onClose();
+    try {
+      await onSubmit(formData);
+      onClose();
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
   };
 
   return (

@@ -17,15 +17,37 @@ export default function TelegramProvider<P extends TelegramProfile>(
     id: "telegram",
     name: "Telegram",
     type: "oauth",
+    wellKnown: "https://oauth.telegram.org/.well-known/openid-configuration",
     authorization: {
       url: "https://oauth.telegram.org/auth",
       params: {
         bot_id: options.clientId,
         origin: process.env.NEXTAUTH_URL,
         return_to: `${process.env.NEXTAUTH_URL}/api/auth/callback/telegram`,
+        request_access: "write",
       },
     },
-    token: "https://oauth.telegram.org/access_token",
+    token: {
+      url: "https://oauth.telegram.org/access_token",
+      async request({ client, params, checks, provider }) {
+        const response = await fetch(provider.token.url as string, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            client_id: options.clientId,
+            client_secret: options.clientSecret,
+            code: params.code,
+            grant_type: "authorization_code",
+            redirect_uri: `${process.env.NEXTAUTH_URL}/api/auth/callback/telegram`,
+          }),
+        });
+
+        const tokens = await response.json();
+        return { tokens };
+      },
+    },
     userinfo: {
       url: "https://api.telegram.org/bot{bot_token}/getMe",
       async request({ tokens, provider }) {
@@ -33,6 +55,11 @@ export default function TelegramProvider<P extends TelegramProfile>(
           `https://api.telegram.org/bot${options.clientSecret}/getMe`
         );
         const data = await response.json();
+        
+        if (!data.ok) {
+          throw new Error("Failed to fetch user info from Telegram");
+        }
+
         return {
           id: data.result.id.toString(),
           name: data.result.username,

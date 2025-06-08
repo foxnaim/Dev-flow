@@ -10,6 +10,11 @@ const handler = NextAuth({
       clientSecret: process.env.TELEGRAM_CLIENT_SECRET!,
     }),
   ],
+  secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider === 'telegram') {
@@ -43,11 +48,18 @@ const handler = NextAuth({
       }
       return session;
     },
+    async jwt({ token, user, account }) {
+      if (account && user) {
+        token.accessToken = account.access_token;
+      }
+      return token;
+    },
   },
   pages: {
     signIn: '/auth/signin',
     error: '/auth/error',
   },
+  debug: process.env.NODE_ENV === 'development',
 });
 
 export { handler as GET, handler as POST }; 

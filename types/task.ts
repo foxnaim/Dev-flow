@@ -1,6 +1,6 @@
 // Типы для задач
-export type TaskPriority = 'низкий' | 'средний' | 'высокий';
-export type TaskStatus = 'к выполнению' | 'в процессе' | 'выполнено';
+export type TaskPriority = 'LOW' | 'MEDIUM' | 'HIGH';
+export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
 
 // Интерфейс задачи
 export interface Task {
@@ -9,11 +9,11 @@ export interface Task {
   description?: string;
   status: TaskStatus;
   priority: TaskPriority;
-  tags?: string[];
   dueDate?: string;
+  documentationLink?: string;
+  userId: string;
   createdAt: string;
   updatedAt: string;
-  documentationLink?: string;
 }
 
 // Интерфейс колонки канбан-доски

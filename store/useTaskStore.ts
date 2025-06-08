@@ -1,54 +1,122 @@
 import { create } from 'zustand';
 import { Task, TaskStatus } from '../types/task';
-import { v4 as uuidv4 } from 'uuid';
 
 // Интерфейс состояния хранилища задач
 interface TaskState {
   // Список всех задач
   tasks: Task[];
+  isLoading: boolean;
+  error: string | null;
+  // Загрузка задач
+  fetchTasks: () => Promise<void>;
   // Добавление новой задачи
-  addTask: (task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  addTask: (task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
   // Обновление существующей задачи
-  updateTask: (id: string, task: Partial<Task>) => void;
+  updateTask: (id: string, task: Partial<Task>) => Promise<void>;
   // Удаление задачи
-  deleteTask: (id: string) => void;
+  deleteTask: (id: string) => Promise<void>;
   // Перемещение задачи между статусами
-  moveTask: (id: string, newStatus: TaskStatus) => void;
+  moveTask: (id: string, newStatus: TaskStatus) => Promise<void>;
 }
 
 // Создание хранилища задач с помощью Zustand
-export const useTaskStore = create<TaskState>((set) => ({
+export const useTaskStore = create<TaskState>((set, get) => ({
   // Список задач
   tasks: [],
+  isLoading: false,
+  error: null,
   
+  // Загрузка задач
+  fetchTasks: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await fetch('/api/tasks');
+      if (!response.ok) throw new Error('Failed to fetch tasks');
+      const tasks = await response.json();
+      set({ tasks, isLoading: false });
+    } catch (error) {
+      set({ error: 'Failed to fetch tasks', isLoading: false });
+    }
+  },
+
   // Добавление новой задачи
-  addTask: (task) => set((state) => ({
-    tasks: [...state.tasks, {
-      ...task,
-      id: uuidv4(),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }],
-  })),
+  addTask: async (task) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await fetch('/api/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(task),
+      });
+      if (!response.ok) throw new Error('Failed to create task');
+      const newTask = await response.json();
+      set((state) => ({
+        tasks: [...state.tasks, newTask],
+        isLoading: false,
+      }));
+    } catch (error) {
+      set({ error: 'Failed to create task', isLoading: false });
+    }
+  },
 
   // Обновление существующей задачи
-  updateTask: (id, updatedTask) => set((state) => ({
-    tasks: state.tasks.map((task) =>
-      task.id === id
-        ? { ...task, ...updatedTask, updatedAt: new Date().toISOString() }
-        : task
-    ),
-  })),
+  updateTask: async (id, updatedTask) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await fetch(`/api/tasks/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedTask),
+      });
+      if (!response.ok) throw new Error('Failed to update task');
+      const updated = await response.json();
+      set((state) => ({
+        tasks: state.tasks.map((task) =>
+          task.id === id ? updated : task
+        ),
+        isLoading: false,
+      }));
+    } catch (error) {
+      set({ error: 'Failed to update task', isLoading: false });
+    }
+  },
 
   // Удаление задачи
-  deleteTask: (id) => set((state) => ({
-    tasks: state.tasks.filter((task) => task.id !== id),
-  })),
+  deleteTask: async (id) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await fetch(`/api/tasks/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete task');
+      set((state) => ({
+        tasks: state.tasks.filter((task) => task.id !== id),
+        isLoading: false,
+      }));
+    } catch (error) {
+      set({ error: 'Failed to delete task', isLoading: false });
+    }
+  },
 
   // Перемещение задачи между статусами
-  moveTask: (id, newStatus) => set((state) => ({
-    tasks: state.tasks.map((task) =>
-      task.id === id ? { ...task, status: newStatus, updatedAt: new Date().toISOString() } : task
-    ),
-  })),
+  moveTask: async (id, newStatus) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await fetch(`/api/tasks/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (!response.ok) throw new Error('Failed to move task');
+      const updated = await response.json();
+      set((state) => ({
+        tasks: state.tasks.map((task) =>
+          task.id === id ? updated : task
+        ),
+        isLoading: false,
+      }));
+    } catch (error) {
+      set({ error: 'Failed to move task', isLoading: false });
+    }
+  },
 })); 

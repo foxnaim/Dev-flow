@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { useTaskStore } from '../../store/useTaskStore';
 import TaskList from '../../components/TaskList';
-import NewTaskForm from '../../components/NewTaskForm';
+import Layout from '@/components/Layout';
 
 export default function CalendarPage() {
   const { fetchTasks, isLoading, error } = useTaskStore();
@@ -34,16 +34,11 @@ export default function CalendarPage() {
   }
 
   return (
+    <Layout>
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-white mb-8">Календарь задач</h1>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
+      <h1 className="text-3xl font-bold text-surfac mb-8">Календарь задач</h1>
           <TaskList />
-        </div>
-        <div>
-          <NewTaskForm />
-        </div>
-      </div>
     </div>
+     </Layout>
   );
 } 

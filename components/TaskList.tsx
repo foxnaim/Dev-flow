@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation';
 export default function TaskList() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const { tasks, moveTask } = useTaskStore();
+  const { tasks } = useTaskStore();
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   if (status === 'loading') {
@@ -33,15 +33,15 @@ export default function TaskList() {
   }
 
   return (
-    <div className="bg-slate-800 rounded-lg shadow-lg p-6">
+    <div className="bg-surface rounded-lg shadow-lg p-6">
       <div className="hidden md:block">
         <table className="min-w-full divide-y divide-slate-700">
           <thead>
             <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Название</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Срок выполнения</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Приоритет</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Статус</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate uppercase tracking-wider">Название</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate uppercase tracking-wider">Срок выполнения</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate uppercase tracking-wider">Приоритет</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate uppercase tracking-wider">Статус</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-700">
@@ -57,7 +57,7 @@ export default function TaskList() {
                   transition={{ duration: 0.2 }}
                   layout
                 >
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">{task.title}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate">{task.title}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
                     {task.dueDate ? format(new Date(task.dueDate), 'dd.MM.yyyy', { locale: ru }) : 'Не указан'}
                   </td>
@@ -102,7 +102,7 @@ export default function TaskList() {
       </div>
 
       {tasks.length === 0 && (
-        <p className="text-center text-slate-400 py-4">Задач нет</p>
+        <p className="text-center text-slate-500 py-4">Задач нет</p>
       )}
 
       <Modal
@@ -143,4 +143,4 @@ export default function TaskList() {
       </Modal>
     </div>
   );
-} 
+}

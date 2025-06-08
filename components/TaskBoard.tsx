@@ -26,14 +26,9 @@ export default function TaskBoard() {
 
   // Загружаем задачи при монтировании компонента
   useEffect(() => {
-    console.log('Fetching tasks...');
-    fetchTasks()
-      .then(loadedTasks => {
-        console.log('Loaded tasks:', loadedTasks);
-      })
-      .catch(error => {
-        console.error('Error loading tasks:', error);
-      });
+    fetchTasks().catch(error => {
+      console.error('Error loading tasks:', error);
+    });
   }, []); // Убираем fetchTasks и tasks из зависимостей
 
   if (isLoading) {
@@ -59,12 +54,12 @@ export default function TaskBoard() {
   }
 
   // Добавляем логирование для отладки рендеринга
-  console.log('Current tasks in TaskBoard:', tasks);
-  console.log('Tasks by status:', {
-    TODO: tasks.filter(t => t.status === 'TODO'),
-    IN_PROGRESS: tasks.filter(t => t.status === 'IN_PROGRESS'),
-    DONE: tasks.filter(t => t.status === 'DONE')
-  });
+  // console.log('Current tasks in TaskBoard:', tasks);
+  // console.log('Tasks by status:', {
+  //   TODO: tasks.filter(t => t.status === 'TODO'),
+  //   IN_PROGRESS: tasks.filter(t => t.status === 'IN_PROGRESS'),
+  //   DONE: tasks.filter(t => t.status === 'DONE')
+  // });
 
   // Обработчик начала перетаскивания
   const handleDragStart = (e: React.DragEvent, task: Task) => {

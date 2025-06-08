@@ -23,7 +23,7 @@ interface NewTaskFormProps {
 }
 
 export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTaskFormProps) {
-  const { addTask } = useTaskStore();
+  const { addTask, updateTask } = useTaskStore();
   const { data: session } = useSession() as { data: Session | null };
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -67,7 +67,11 @@ export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTask
     };
 
     try {
-      await addTask(taskData);
+      if (existingTask) {
+        await updateTask(existingTask.id, taskData);
+      } else {
+        await addTask(taskData);
+      }
       setTitle('');
       setDescription('');
       setPriority('MEDIUM');

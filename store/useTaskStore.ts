@@ -81,7 +81,6 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   updateTask: async (id, updatedTask) => {
     set({ isLoading: true, error: null });
     try {
-      console.log(`Attempting to update task with ID: ${id}`, updatedTask);
       const response = await fetch(`/api/tasks/${id}`, {
         method: 'PUT',
         credentials: 'include',
@@ -93,9 +92,11 @@ export const useTaskStore = create<TaskState>((set, get) => ({
         throw new Error(error.error || 'Failed to update task');
       }
       const updated = await response.json();
+      console.log('Updated task received from backend (updateTask):', updated);
+      const transformedUpdated = { ...updated, id: updated._id || updated.id };
       set((state) => ({
         tasks: state.tasks.map((task) =>
-          task.id === id ? updated : task
+          task.id === id ? transformedUpdated : task
         ),
         isLoading: false,
       }));
@@ -132,7 +133,6 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   moveTask: async (id, newStatus) => {
     set({ isLoading: true, error: null });
     try {
-      console.log(`Attempting to move task with ID: ${id} to status: ${newStatus}`);
       const response = await fetch(`/api/tasks/${id}`, {
         method: 'PUT',
         credentials: 'include',
@@ -144,9 +144,11 @@ export const useTaskStore = create<TaskState>((set, get) => ({
         throw new Error(error.error || 'Failed to move task');
       }
       const updated = await response.json();
+      console.log('Updated task received from backend (moveTask):', updated);
+      const transformedUpdated = { ...updated, id: updated._id || updated.id };
       set((state) => ({
         tasks: state.tasks.map((task) =>
-          task.id === id ? updated : task
+          task.id === id ? transformedUpdated : task
         ),
         isLoading: false,
       }));

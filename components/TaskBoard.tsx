@@ -9,14 +9,14 @@ import { motion } from 'framer-motion';
 
 // Определение колонок для канбан-доски
 const columns: { id: TaskStatus; title: string }[] = [
-  { id: 'к выполнению', title: 'К выполнению' },
-  { id: 'в процессе', title: 'В процессе' },
-  { id: 'выполнено', title: 'Выполнено' }
+  { id: 'TODO', title: 'К выполнению' },
+  { id: 'IN_PROGRESS', title: 'В процессе' },
+  { id: 'DONE', title: 'Выполнено' }
 ];
 
 export default function TaskBoard() {
   // Получаем задачи и функции из хранилища
-  const { tasks, moveTask, deleteTask, addTask, updateTask } = useTaskStore();
+  const { tasks, moveTask } = useTaskStore(); // deleteTask, addTask, updateTask больше не используются здесь
   // Состояние для отслеживания перетаскиваемой задачи
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
   // Состояние модального окна для новой задачи
@@ -45,16 +45,10 @@ export default function TaskBoard() {
     }
   };
 
-  // Обработчик отправки формы задачи
-  const handleTaskSubmit = (taskData: Partial<Task>) => {
-    if (editingTask) {
-      updateTask(editingTask.id, taskData);
-    } else {
-      addTask({
-        ...taskData,
-        status: 'к выполнению',
-      } as Task);
-    }
+  // Обработчик отправки формы задачи (теперь только закрывает модальное окно)
+  const handleTaskFormClose = () => {
+    setIsNewTaskModalOpen(false);
+    setEditingTask(null);
   };
 
   return (
@@ -88,18 +82,16 @@ export default function TaskBoard() {
               onDrop={(e) => handleDrop(e, column.id)}
             >
               {tasks
-                .filter((task) => task.status === column.id)
-                .map((task) => (
+                .filter((task: Task) => task.status === column.id)
+                .map((task: Task) => (
                   <TaskCard
                     key={task.id}
                     task={task}
-                    onEdit={(taskToEdit) => {
+                    onEdit={(taskToEdit: Task) => {
                       setEditingTask(taskToEdit);
                       setIsNewTaskModalOpen(true);
                     }}
-                    onDelete={deleteTask}
-                    onDragStart={(e) => handleDragStart(e, task)}
-                    onChangeStatus={moveTask}
+                    onDragStart={(e: React.DragEvent, task: Task) => handleDragStart(e, task)}
                   />
                 ))}
             </div>
@@ -110,18 +102,11 @@ export default function TaskBoard() {
       {/* Модальное окно для новой задачи */}
       <Modal
         isOpen={isNewTaskModalOpen}
-        onClose={() => {
-          setIsNewTaskModalOpen(false);
-          setEditingTask(null);
-        }}
+        onClose={handleTaskFormClose}
         title={editingTask ? 'Редактировать задачу' : 'Новая задача'}
       >
         <NewTaskForm 
-          onSubmit={handleTaskSubmit}
-          onClose={() => {
-            setIsNewTaskModalOpen(false);
-            setEditingTask(null);
-          }}
+          onClose={handleTaskFormClose}
           existingTask={editingTask || undefined}
         />
       </Modal>

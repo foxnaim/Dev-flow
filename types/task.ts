@@ -12,6 +12,7 @@ export interface Task {
   dueDate?: string;
   documentationLink?: string;
   userId: string;
+  tags?: string[];
   createdAt: string;
   updatedAt: string;
 }

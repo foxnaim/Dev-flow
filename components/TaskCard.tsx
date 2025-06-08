@@ -1,4 +1,4 @@
-'use client';
+
 
 import { Task, TaskPriority, TaskStatus } from '../types/task';
 import { format } from 'date-fns';
@@ -8,9 +8,11 @@ import { ExternalLink } from 'lucide-react';
 
 interface TaskCardProps {
   task: Task;
+  onEdit: (task: Task) => void;
+  onDragStart: (e: React.DragEvent, task: Task) => void;
 }
 
-export default function TaskCard({ task }: TaskCardProps) {
+export default function TaskCard({ task, onEdit, onDragStart }: TaskCardProps) {
   const { moveTask } = useTaskStore();
 
   const getPriorityColor = (priority: TaskPriority) => {
@@ -48,7 +50,7 @@ export default function TaskCard({ task }: TaskCardProps) {
   };
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-4">
+    <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-4" draggable onDragStart={(e) => onDragStart(e, task)}>
       <div className="flex justify-between items-start mb-4">
         <h3 className="text-lg font-medium text-gray-900 dark:text-white break-words">
           {task.title}
@@ -72,6 +74,16 @@ export default function TaskCard({ task }: TaskCardProps) {
       )}
 
       <div className="flex flex-wrap gap-2 mb-4">
+        {task.tags && task.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {task.tags.map((tag, index) => (
+              <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
         {task.dueDate && (
           <span className="text-sm text-gray-500 dark:text-gray-400">
             Срок: {format(new Date(task.dueDate), 'dd.MM.yyyy', { locale: ru })}
@@ -91,6 +103,12 @@ export default function TaskCard({ task }: TaskCardProps) {
       </div>
 
       <div className="flex justify-end space-x-2">
+        <button
+          onClick={() => onEdit(task)}
+          className="px-3 py-1 text-sm text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300"
+        >
+          Редактировать
+        </button>
         {task.status !== 'TODO' && (
           <button
             onClick={() => handleStatusChange('TODO')}

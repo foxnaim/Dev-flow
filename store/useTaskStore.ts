@@ -30,12 +30,20 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   fetchTasks: async () => {
     set({ isLoading: true, error: null });
     try {
-      const response = await fetch('/api/tasks');
-      if (!response.ok) throw new Error('Failed to fetch tasks');
+      const response = await fetch('/api/tasks', {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to fetch tasks');
+      }
       const tasks = await response.json();
       set({ tasks, isLoading: false });
     } catch (error) {
-      set({ error: 'Failed to fetch tasks', isLoading: false });
+      set({ error: error instanceof Error ? error.message : 'Failed to fetch tasks', isLoading: false });
     }
   },
 
@@ -45,17 +53,21 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     try {
       const response = await fetch('/api/tasks', {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(task),
       });
-      if (!response.ok) throw new Error('Failed to create task');
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to create task');
+      }
       const newTask = await response.json();
       set((state) => ({
         tasks: [...state.tasks, newTask],
         isLoading: false,
       }));
     } catch (error) {
-      set({ error: 'Failed to create task', isLoading: false });
+      set({ error: error instanceof Error ? error.message : 'Failed to create task', isLoading: false });
     }
   },
 
@@ -65,10 +77,14 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     try {
       const response = await fetch(`/api/tasks/${id}`, {
         method: 'PUT',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedTask),
       });
-      if (!response.ok) throw new Error('Failed to update task');
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to update task');
+      }
       const updated = await response.json();
       set((state) => ({
         tasks: state.tasks.map((task) =>
@@ -77,7 +93,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
         isLoading: false,
       }));
     } catch (error) {
-      set({ error: 'Failed to update task', isLoading: false });
+      set({ error: error instanceof Error ? error.message : 'Failed to update task', isLoading: false });
     }
   },
 
@@ -87,14 +103,21 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     try {
       const response = await fetch(`/api/tasks/${id}`, {
         method: 'DELETE',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
-      if (!response.ok) throw new Error('Failed to delete task');
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to delete task');
+      }
       set((state) => ({
         tasks: state.tasks.filter((task) => task.id !== id),
         isLoading: false,
       }));
     } catch (error) {
-      set({ error: 'Failed to delete task', isLoading: false });
+      set({ error: error instanceof Error ? error.message : 'Failed to delete task', isLoading: false });
     }
   },
 
@@ -104,10 +127,14 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     try {
       const response = await fetch(`/api/tasks/${id}`, {
         method: 'PUT',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
       });
-      if (!response.ok) throw new Error('Failed to move task');
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to move task');
+      }
       const updated = await response.json();
       set((state) => ({
         tasks: state.tasks.map((task) =>
@@ -116,7 +143,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
         isLoading: false,
       }));
     } catch (error) {
-      set({ error: 'Failed to move task', isLoading: false });
+      set({ error: error instanceof Error ? error.message : 'Failed to move task', isLoading: false });
     }
   },
 })); 

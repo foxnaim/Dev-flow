@@ -1,10 +1,11 @@
-import NextAuth from 'next-auth';
+import NextAuth, { AuthOptions, Session, User as NextAuthUser } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { JWT } from 'next-auth/jwt';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 import bcrypt from 'bcryptjs';
 
-const handler = NextAuth({
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -31,18 +32,18 @@ const handler = NextAuth({
   ],
   secret: process.env.NEXTAUTH_SECRET,
   session: {
-    strategy: "jwt",
+    strategy: "jwt" as const,
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
-    async signIn({ user }) {
+    async signIn({ user }: { user: NextAuthUser }) {
       console.log('SignIn callback started. User:', user);
       if (user) {
         return true;
       }
       return false;
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       console.log('Session callback started. Token sub:', token.sub);
       if (session?.user && token.sub) {
         session.user.id = token.sub;
@@ -50,7 +51,7 @@ const handler = NextAuth({
       console.log('Session returned:', session);
       return session;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: JWT; user?: NextAuthUser }) {
       console.log('JWT callback started. User:', user);
       if (user) {
         token.id = user.id;
@@ -66,6 +67,8 @@ const handler = NextAuth({
     error: '/auth/error',
   },
   debug: process.env.NODE_ENV === 'development',
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST }; 

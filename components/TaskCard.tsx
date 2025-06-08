@@ -1,5 +1,3 @@
-
-
 import { Task, TaskPriority, TaskStatus } from '../types/task';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale/ru';
@@ -76,8 +74,8 @@ export default function TaskCard({ task, onEdit, onDragStart }: TaskCardProps) {
       <div className="flex flex-wrap gap-2 mb-4">
         {task.tags && task.tags.length > 0 && (
           <div className="flex flex-wrap gap-1">
-            {task.tags.map((tag, index) => (
-              <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+            {task.tags.map((tag) => (
+              <span key={`${task.id}-${tag}`} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
                 {tag}
               </span>
             ))}

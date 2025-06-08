@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Task, TaskStatus } from '../types/task';
 import { useTaskStore } from '../store/useTaskStore';
 import TaskCard from './TaskCard';
@@ -16,13 +16,18 @@ const columns: { id: TaskStatus; title: string }[] = [
 
 export default function TaskBoard() {
   // Получаем задачи и функции из хранилища
-  const { tasks, moveTask } = useTaskStore(); // deleteTask, addTask, updateTask больше не используются здесь
+  const { tasks, moveTask, fetchTasks } = useTaskStore();
   // Состояние для отслеживания перетаскиваемой задачи
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
   // Состояние модального окна для новой задачи
   const [isNewTaskModalOpen, setIsNewTaskModalOpen] = useState(false);
   // Состояние для задачи, которая редактируется
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+
+  // Загружаем задачи при монтировании компонента
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
 
   // Обработчик начала перетаскивания
   const handleDragStart = (e: React.DragEvent, task: Task) => {

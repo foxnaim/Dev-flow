@@ -13,17 +13,18 @@ export interface TelegramProfile {
 export default function TelegramProvider<P extends TelegramProfile>(
   options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
+  const baseUrl = 'https://fruity-forks-greet.loca.lt';
+  
   return {
     id: "telegram",
     name: "Telegram",
     type: "oauth",
-    wellKnown: "https://oauth.telegram.org/.well-known/openid-configuration",
     authorization: {
       url: "https://oauth.telegram.org/auth",
       params: {
         bot_id: options.clientId,
-        origin: process.env.NEXTAUTH_URL,
-        return_to: `${process.env.NEXTAUTH_URL}/api/auth/callback/telegram`,
+        origin: baseUrl,
+        return_to: `${baseUrl}/api/auth/callback/telegram`,
         request_access: "write",
       },
     },
@@ -40,7 +41,7 @@ export default function TelegramProvider<P extends TelegramProfile>(
             client_secret: options.clientSecret,
             code: params.code,
             grant_type: "authorization_code",
-            redirect_uri: `${process.env.NEXTAUTH_URL}/api/auth/callback/telegram`,
+            redirect_uri: `${baseUrl}/api/auth/callback/telegram`,
           }),
         });
 
@@ -49,7 +50,7 @@ export default function TelegramProvider<P extends TelegramProfile>(
       },
     },
     userinfo: {
-      url: "https://api.telegram.org/bot{bot_token}/getMe",
+      url: `https://api.telegram.org/bot${options.clientSecret}/getMe`,
       async request({ tokens, provider }) {
         const response = await fetch(
           `https://api.telegram.org/bot${options.clientSecret}/getMe`
@@ -62,8 +63,10 @@ export default function TelegramProvider<P extends TelegramProfile>(
 
         return {
           id: data.result.id.toString(),
-          name: data.result.username,
-          image: `https://t.me/${data.result.username}`,
+          first_name: data.result.first_name,
+          last_name: data.result.last_name,
+          username: data.result.username,
+          photo_url: data.result.photo_url,
         };
       },
     },

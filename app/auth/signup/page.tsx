@@ -1,31 +1,45 @@
 'use client';
 
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-export default function SignIn() {
+export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setSuccess(null);
 
-    const result = await signIn('credentials', {
-      redirect: false,
-      email,
-      password,
-    });
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password, username }),
+      });
 
-    if (result?.error) {
-      setError(result.error);
-    } else {
-      router.push('/'); // Перенаправить на главную страницу после успешного входа
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || 'Registration failed');
+      } else {
+        setSuccess(data.message || 'Registration successful! Redirecting to login...');
+        setTimeout(() => {
+          router.push('/auth/signin');
+        }, 2000);
+      }
+    } catch (err) {
+      console.error('Error during registration request:', err);
+      setError('An unexpected error occurred.');
     }
   };
 
@@ -38,8 +52,8 @@ export default function SignIn() {
           transition={{ duration: 0.5 }}
           className="mb-8 text-center"
         >
-          <h1 className="text-4xl font-bold text-white mb-4">Добро пожаловать в DevFlow</h1>
-          <p className="text-slate-400">Войдите, чтобы продолжить</p>
+          <h1 className="text-4xl font-bold text-white mb-4">Создать аккаунт</h1>
+          <p className="text-slate-400">Зарегистрируйтесь, чтобы начать работу</p>
         </motion.div>
 
         <motion.form
@@ -63,6 +77,18 @@ export default function SignIn() {
             />
           </div>
           <div>
+            <label htmlFor="username" className="block text-sm font-medium text-slate-300">Имя пользователя (необязательно)</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-white"
+              placeholder="Ваше имя"
+            />
+          </div>
+          <div>
             <label htmlFor="password" className="block text-sm font-medium text-slate-300">Пароль</label>
             <input
               type="password"
@@ -77,17 +103,18 @@ export default function SignIn() {
           </div>
 
           {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+          {success && <p className="text-green-500 text-sm text-center">{success}</p>}
 
           <button
             type="submit"
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
           >
-            Войти
+            Зарегистрироваться
           </button>
           <p className="mt-4 text-center text-slate-400 text-sm">
-            Еще нет аккаунта? {''}
-            <Link href="/auth/signup" className="font-medium text-blue-500 hover:text-blue-400">
-              Зарегистрироваться
+            Уже есть аккаунт? {''}
+            <Link href="/auth/signin" className="font-medium text-blue-500 hover:text-blue-400">
+              Войти
             </Link>
           </p>
         </motion.form>

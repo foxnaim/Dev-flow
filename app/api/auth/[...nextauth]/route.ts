@@ -1,13 +1,32 @@
 import NextAuth from 'next-auth';
-import TelegramProvider from '@/lib/telegram-provider';
+import CredentialsProvider from 'next-auth/providers/credentials';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
+import bcrypt from 'bcryptjs';
 
 const handler = NextAuth({
   providers: [
-    TelegramProvider({
-      clientId: process.env.TELEGRAM_CLIENT_ID!,
-      clientSecret: process.env.TELEGRAM_CLIENT_SECRET!,
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        email: { label: 'Email', type: 'text' },
+        password: { label: 'Password', type: 'password' }
+      },
+      async authorize(credentials) {
+        console.log('Authorize callback started.');
+        await connectDB();
+
+        const user = await User.findOne({ email: credentials?.email });
+        console.log('User found in authorize:', user ? user.email : 'None');
+
+        if (user && bcrypt.compareSync(credentials!.password, user.password)) {
+          console.log('Password matched. Returning user:', user._id.toString());
+          return { id: user._id.toString(), name: user.username, email: user.email }; // Явно преобразуем _id в string
+        } else {
+          console.log('Password did not match or user not found.');
+          return null;
+        }
+      }
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
@@ -16,42 +35,29 @@ const handler = NextAuth({
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
-    async signIn({ user, account }) {
-      if (account?.provider === 'telegram') {
-        try {
-          await connectDB();
-          
-          const telegramData = account.providerAccountId;
-          const existingUser = await User.findOne({ telegramId: telegramData });
-
-          if (!existingUser) {
-            await User.create({
-              telegramId: telegramData,
-              username: user.name,
-              firstName: user.firstName,
-              lastName: user.lastName,
-              photoUrl: user.image,
-            });
-          }
-
-          return true;
-        } catch (error) {
-          console.error('Error during sign in:', error);
-          return false;
-        }
+    async signIn({ user }) {
+      console.log('SignIn callback started. User:', user);
+      if (user) {
+        return true;
       }
       return false;
     },
     async session({ session, token }) {
-      if (session?.user) {
+      console.log('Session callback started. Token sub:', token.sub);
+      if (session?.user && token.sub) {
         session.user.id = token.sub;
       }
+      console.log('Session returned:', session);
       return session;
     },
-    async jwt({ token, user, account }) {
-      if (account && user) {
-        token.accessToken = account.access_token;
+    async jwt({ token, user }) {
+      console.log('JWT callback started. User:', user);
+      if (user) {
+        token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
       }
+      console.log('JWT token returned:', token);
       return token;
     },
   },

@@ -14,6 +14,7 @@
     "@shadcn/ui": "^0.0.4",
     "@you-got-bud/calendar": "^0.4.6",
     "autoprefixer": "^10.4.21",
+    "bcryptjs": "^3.0.2",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",

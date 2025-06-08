@@ -2,7 +2,8 @@ import { Task, TaskPriority, TaskStatus } from '../types/task';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale/ru';
 import { useTaskStore } from '../store/useTaskStore';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, MoreVertical, Edit, Trash2 } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
 
 interface TaskCardProps {
   task: Task;
@@ -11,7 +12,42 @@ interface TaskCardProps {
 }
 
 export default function TaskCard({ task, onEdit, onDragStart }: TaskCardProps) {
-  const { moveTask } = useTaskStore();
+  const { moveTask, deleteTask } = useTaskStore();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleEditClick = () => {
+    onEdit(task);
+    setIsMenuOpen(false);
+  };
+
+  const handleDeleteClick = async () => {
+    if (confirm('Вы уверены, что хотите удалить эту задачу?')) {
+      try {
+        await deleteTask(task.id);
+      } catch (error) {
+        console.error('Failed to delete task:', error);
+      }
+    }
+    setIsMenuOpen(false);
+  };
+
+  const handleStatusChangeInMenu = async (newStatus: TaskStatus) => {
+    await handleStatusChange(newStatus);
+    setIsMenuOpen(false);
+  };
 
   const getPriorityColor = (priority: TaskPriority) => {
     switch (priority) {
@@ -100,36 +136,53 @@ export default function TaskCard({ task, onEdit, onDragStart }: TaskCardProps) {
         )}
       </div>
 
-      <div className="flex justify-end space-x-2">
+      <div className="flex justify-end relative" ref={menuRef}>
         <button
-          onClick={() => onEdit(task)}
-          className="px-3 py-1 text-sm text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="p-1 rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-slate-700 focus:outline-none"
         >
-          Редактировать
+          <MoreVertical className="w-5 h-5" />
         </button>
-        {task.status !== 'TODO' && (
-          <button
-            onClick={() => handleStatusChange('TODO')}
-            className="px-3 py-1 text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-          >
-            К выполнению
-          </button>
-        )}
-        {task.status !== 'IN_PROGRESS' && (
-          <button
-            onClick={() => handleStatusChange('IN_PROGRESS')}
-            className="px-3 py-1 text-sm text-yellow-600 hover:text-yellow-800 dark:text-yellow-400 dark:hover:text-yellow-300"
-          >
-            В процессе
-          </button>
-        )}
-        {task.status !== 'DONE' && (
-          <button
-            onClick={() => handleStatusChange('DONE')}
-            className="px-3 py-1 text-sm text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300"
-          >
-            Выполнено
-          </button>
+
+        {isMenuOpen && (
+          <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-700 rounded-md shadow-lg z-10 py-1">
+            <button
+              onClick={handleEditClick}
+              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600"
+            >
+              <Edit className="w-4 h-4 mr-2" /> Редактировать
+            </button>
+            {task.status !== 'TODO' && (
+              <button
+                onClick={() => handleStatusChangeInMenu('TODO')}
+                className="flex items-center w-full px-4 py-2 text-sm text-blue-600 hover:bg-gray-100 dark:text-blue-400 dark:hover:bg-slate-600"
+              >
+                К выполнению
+              </button>
+            )}
+            {task.status !== 'IN_PROGRESS' && (
+              <button
+                onClick={() => handleStatusChangeInMenu('IN_PROGRESS')}
+                className="flex items-center w-full px-4 py-2 text-sm text-yellow-600 hover:bg-gray-100 dark:text-yellow-400 dark:hover:bg-slate-600"
+              >
+                В процессе
+              </button>
+            )}
+            {task.status !== 'DONE' && (
+              <button
+                onClick={() => handleStatusChangeInMenu('DONE')}
+                className="flex items-center w-full px-4 py-2 text-sm text-green-600 hover:bg-gray-100 dark:text-green-400 dark:hover:bg-slate-600"
+              >
+                Выполнено
+              </button>
+            )}
+            <button
+              onClick={handleDeleteClick}
+              className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:text-red-400 dark:hover:bg-slate-600"
+            >
+              <Trash2 className="w-4 h-4 mr-2" /> Удалить
+            </button>
+          </div>
         )}
       </div>
     </div>

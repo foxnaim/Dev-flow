@@ -39,7 +39,7 @@ export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTask
       setTitle(existingTask.title);
       setDescription(existingTask.description || '');
       setPriority(existingTask.priority);
-      setDueDate(existingTask.dueDate || '');
+      setDueDate(existingTask.dueDate ? new Date(existingTask.dueDate).toISOString().split('T')[0] : '');
       setDocumentationLink(existingTask.documentationLink || '');
       setTags(existingTask.tags?.join(', ') || '');
     }
@@ -59,7 +59,7 @@ export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTask
       title,
       description,
       priority,
-      dueDate: dueDate || undefined,
+      dueDate: dueDate ? new Date(dueDate).toISOString() : undefined,
       status: existingTask?.status || 'TODO' as TaskStatus,
       documentationLink: documentationLink || undefined,
       userId: session.user.id,

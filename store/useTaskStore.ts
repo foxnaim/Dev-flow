@@ -41,9 +41,15 @@ export const useTaskStore = create<TaskState>((set, get) => ({
         throw new Error(error.error || 'Failed to fetch tasks');
       }
       const tasks = await response.json();
-      set({ tasks, isLoading: false });
+      const transformedTasks = tasks.map((task: any) => ({
+        ...task,
+        id: task._id,
+      }));
+      set({ tasks: transformedTasks, isLoading: false });
+      return transformedTasks;
     } catch (error) {
       set({ error: error instanceof Error ? error.message : 'Failed to fetch tasks', isLoading: false });
+      throw error;
     }
   },
 
@@ -75,6 +81,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   updateTask: async (id, updatedTask) => {
     set({ isLoading: true, error: null });
     try {
+      console.log(`Attempting to update task with ID: ${id}`, updatedTask);
       const response = await fetch(`/api/tasks/${id}`, {
         method: 'PUT',
         credentials: 'include',
@@ -125,6 +132,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   moveTask: async (id, newStatus) => {
     set({ isLoading: true, error: null });
     try {
+      console.log(`Attempting to move task with ID: ${id} to status: ${newStatus}`);
       const response = await fetch(`/api/tasks/${id}`, {
         method: 'PUT',
         credentials: 'include',

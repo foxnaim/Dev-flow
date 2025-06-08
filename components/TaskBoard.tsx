@@ -16,7 +16,7 @@ const columns: { id: TaskStatus; title: string }[] = [
 
 export default function TaskBoard() {
   // Получаем задачи и функции из хранилища
-  const { tasks, moveTask, fetchTasks } = useTaskStore();
+  const { tasks, moveTask, fetchTasks, isLoading, error } = useTaskStore();
   // Состояние для отслеживания перетаскиваемой задачи
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
   // Состояние модального окна для новой задачи
@@ -27,12 +27,44 @@ export default function TaskBoard() {
   // Загружаем задачи при монтировании компонента
   useEffect(() => {
     console.log('Fetching tasks...');
-    fetchTasks().then(() => {
-      console.log('Tasks loaded:', tasks);
-    }).catch(error => {
-      console.error('Error loading tasks:', error);
-    });
-  }, [fetchTasks, tasks]);
+    fetchTasks()
+      .then(loadedTasks => {
+        console.log('Loaded tasks:', loadedTasks);
+      })
+      .catch(error => {
+        console.error('Error loading tasks:', error);
+      });
+  }, []); // Убираем fetchTasks и tasks из зависимостей
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto"></div>
+          <p className="mt-4 text-foreground">Загрузка задач...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-500 text-2xl mb-4">Ошибка</div>
+          <p className="text-foreground">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Добавляем логирование для отладки рендеринга
+  console.log('Current tasks in TaskBoard:', tasks);
+  console.log('Tasks by status:', {
+    TODO: tasks.filter(t => t.status === 'TODO'),
+    IN_PROGRESS: tasks.filter(t => t.status === 'IN_PROGRESS'),
+    DONE: tasks.filter(t => t.status === 'DONE')
+  });
 
   // Обработчик начала перетаскивания
   const handleDragStart = (e: React.DragEvent, task: Task) => {
@@ -92,17 +124,18 @@ export default function TaskBoard() {
               onDrop={(e) => handleDrop(e, column.id)}
             >
               {tasks
-                .filter((task: Task) => task.status === column.id)
+                .filter((task: Task) => task.status === column.id && task.id)
                 .map((task: Task) => (
-                  <TaskCard
-                    key={task.id}
-                    task={task}
-                    onEdit={(taskToEdit: Task) => {
-                      setEditingTask(taskToEdit);
-                      setIsNewTaskModalOpen(true);
-                    }}
-                    onDragStart={(e: React.DragEvent, task: Task) => handleDragStart(e, task)}
-                  />
+                  <div key={task.id || `temp-${Math.random()}`}>
+                    <TaskCard
+                      task={task}
+                      onEdit={(taskToEdit: Task) => {
+                        setEditingTask(taskToEdit);
+                        setIsNewTaskModalOpen(true);
+                      }}
+                      onDragStart={(e: React.DragEvent, task: Task) => handleDragStart(e, task)}
+                    />
+                  </div>
                 ))}
             </div>
           </motion.div>

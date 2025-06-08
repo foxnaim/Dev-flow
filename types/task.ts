@@ -13,6 +13,7 @@ export interface Task {
   dueDate?: string;
   createdAt: string;
   updatedAt: string;
+  documentationLink?: string;
 }
 
 // Интерфейс колонки канбан-доски

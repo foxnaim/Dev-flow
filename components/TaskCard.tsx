@@ -1,6 +1,6 @@
 import { Task, TaskStatus, TaskPriority } from '../types/task';
 import { motion } from 'framer-motion';
-import { MoreVertical, Edit, Trash2, CheckSquare } from 'lucide-react';
+import { MoreVertical, Edit, Trash2, CheckSquare, ExternalLink } from 'lucide-react';
 import { useState } from 'react';
 
 // Пропсы для карточки задачи
@@ -65,7 +65,7 @@ export default function TaskCard({ task, onDragStart, onDelete, onChangeStatus, 
         onDragStart={(e: React.DragEvent<HTMLDivElement>) => onDragStart(e, task)}
       >
         <div className="flex justify-between items-start mb-2">
-          <h3 className="font-medium text-foreground">{task.title}</h3>
+          <h3 className="font-medium text-foreground break-words">{task.title}</h3>
           <div className="relative">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -131,7 +131,19 @@ export default function TaskCard({ task, onDragStart, onDelete, onChangeStatus, 
         </div>
 
         {task.description && (
-          <p className="text-sm text-secondary-text mb-2">{task.description}</p>
+          <p className="text-sm text-secondary-text mb-2 break-words whitespace-pre-wrap">{task.description}</p>
+        )}
+
+        {task.documentationLink && (
+          <a
+            href={task.documentationLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center text-sm text-blue-600 hover:text-blue-800 mb-2"
+          >
+            <ExternalLink className="w-4 h-4 mr-1" />
+            Техническая документация
+          </a>
         )}
 
         <div className="flex flex-wrap gap-2 mt-2">

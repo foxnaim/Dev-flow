@@ -67,7 +67,7 @@ export default function NotesPage() {
                 className="bg-surface rounded-lg shadow-sm border border-border p-4"
               >
                 <div className="flex justify-between items-start mb-2">
-                  <h2 className="text-lg font-semibold text-foreground">{note.title}</h2>
+                  <h2 className="text-lg font-semibold text-foreground break-words">{note.title}</h2>
                   <div className="flex gap-2">
                     <button
                       onClick={() => {
@@ -86,7 +86,7 @@ export default function NotesPage() {
                     </button>
                   </div>
                 </div>
-                <p className="text-secondary-text">{note.content}</p>
+                <p className="text-secondary-text break-words whitespace-pre-wrap">{note.content}</p>
                 <div className="mt-4 text-xs text-secondary-text">
                   {new Date(note.createdAt).toLocaleDateString('ru-RU')}
                 </div>

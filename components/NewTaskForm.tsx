@@ -13,6 +13,7 @@ export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTask
   const [priority, setPriority] = useState<TaskPriority>('средний');
   const [tags, setTags] = useState('');
   const [dueDate, setDueDate] = useState('');
+  const [documentationLink, setDocumentationLink] = useState('');
 
   useEffect(() => {
     if (existingTask) {
@@ -21,6 +22,7 @@ export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTask
       setPriority(existingTask.priority);
       setTags(existingTask.tags?.join(', ') || '');
       setDueDate(existingTask.dueDate || '');
+      setDocumentationLink(existingTask.documentationLink || '');
     }
   }, [existingTask]);
 
@@ -33,7 +35,8 @@ export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTask
       priority,
       tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
       dueDate: dueDate || undefined,
-      status: existingTask?.status || 'к выполнению'
+      status: existingTask?.status || 'к выполнению',
+      documentationLink: documentationLink || undefined
     };
 
     onSubmit(taskData);
@@ -68,6 +71,20 @@ export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTask
           onChange={(e) => setDescription(e.target.value)}
           className={inputClasses}
           rows={3}
+        />
+      </div>
+
+      <div>
+        <label htmlFor="documentationLink" className="block text-sm font-medium text-foreground mb-1">
+          Ссылка на документацию
+        </label>
+        <input
+          type="url"
+          id="documentationLink"
+          value={documentationLink}
+          onChange={(e) => setDocumentationLink(e.target.value)}
+          className={inputClasses}
+          placeholder="https://..."
         />
       </div>
 

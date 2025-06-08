@@ -6,6 +6,8 @@ import Modal from './Modal';
 import NewTaskForm from './NewTaskForm';
 import { Plus } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 // Определение колонок для канбан-доски
 const columns: { id: TaskStatus; title: string }[] = [
@@ -15,7 +17,8 @@ const columns: { id: TaskStatus; title: string }[] = [
 ];
 
 export default function TaskBoard() {
-  // Получаем задачи и функции из хранилища
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const { tasks, moveTask, fetchTasks, isLoading, error } = useTaskStore();
   // Состояние для отслеживания перетаскиваемой задачи
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
@@ -24,12 +27,26 @@ export default function TaskBoard() {
   // Состояние для задачи, которая редактируется
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
-  // Загружаем задачи при монтировании компонента
   useEffect(() => {
-    fetchTasks().catch(error => {
-      console.error('Error loading tasks:', error);
-    });
-  }, []); // Убираем fetchTasks и tasks из зависимостей
+    if (status === 'authenticated') {
+      fetchTasks().catch(error => {
+        console.error('Error loading tasks:', error);
+      });
+    } else if (status === 'unauthenticated') {
+      router.push('/auth/signin');
+    }
+  }, [status, fetchTasks, router]);
+
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto"></div>
+          <p className="mt-4 text-foreground">Загрузка...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (

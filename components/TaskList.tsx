@@ -7,10 +7,30 @@ import { ru } from 'date-fns/locale/ru';
 import { useState } from 'react';
 import Modal from './Modal';
 import { Task } from '../types/task';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function TaskList() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const { tasks, moveTask } = useTaskStore();
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto"></div>
+          <p className="mt-4 text-foreground">Загрузка...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === 'unauthenticated') {
+    router.push('/auth/signin');
+    return null;
+  }
 
   return (
     <div className="bg-slate-800 rounded-lg shadow-lg p-6">

@@ -8,9 +8,8 @@ import Task from '@/models/Task';
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
-    
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!session) {
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     await connectDB();
@@ -18,7 +17,7 @@ export async function GET() {
     return NextResponse.json(tasks);
   } catch (error) {
     console.error('Error fetching tasks:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
 
@@ -26,9 +25,8 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
-    
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!session) {
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     const body = await request.json();
@@ -42,6 +40,6 @@ export async function POST(request: Request) {
     return NextResponse.json(task);
   } catch (error) {
     console.error('Error creating task:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 } 

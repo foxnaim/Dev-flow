@@ -6,15 +6,13 @@ export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
 export interface Task {
   id: string;
   title: string;
-  description?: string;
+  description: string;
   status: TaskStatus;
-  priority: TaskPriority;
-  dueDate?: string;
-  documentationLink?: string;
-  userId: string;
-  tags?: string[];
+  priority: 'high' | 'medium' | 'low';
+  dueDate: string; // ISO string
   createdAt: string;
   updatedAt: string;
+  userId: string;
 }
 
 // Интерфейс колонки канбан-доски

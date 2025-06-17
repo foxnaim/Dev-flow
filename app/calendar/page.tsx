@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useTaskStore } from '../../store/useTaskStore';
 import Layout from '@/components/Layout';
 import { Calendar } from '@/components/Calendar';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function CalendarPage() {
   const { fetchTasks, isLoading, error } = useTaskStore();
@@ -12,14 +13,7 @@ export default function CalendarPage() {
   }, [fetchTasks]);
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-900">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-white">Загрузка задач...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner text="Загрузка задач..." />;
   }
 
   if (error) {

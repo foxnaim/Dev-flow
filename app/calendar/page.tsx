@@ -1,8 +1,8 @@
 'use client';
 import { useEffect } from 'react';
 import { useTaskStore } from '../../store/useTaskStore';
-import TaskList from '../../components/TaskList';
 import Layout from '@/components/Layout';
+import { Calendar } from '@/components/Calendar';
 
 export default function CalendarPage() {
   const { fetchTasks, isLoading, error } = useTaskStore();
@@ -35,10 +35,7 @@ export default function CalendarPage() {
 
   return (
     <Layout>
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-surfac mb-8">Календарь задач</h1>
-          <TaskList />
-    </div>
-     </Layout>
+      <Calendar />
+    </Layout>
   );
 } 

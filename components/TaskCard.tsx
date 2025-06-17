@@ -12,7 +12,7 @@ interface TaskCardProps {
 }
 
 export default function TaskCard({ task, onEdit, onDragStart }: TaskCardProps) {
-  const { moveTask, deleteTask } = useTaskStore();
+  const { updateTask, deleteTask } = useTaskStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -77,9 +77,9 @@ export default function TaskCard({ task, onEdit, onDragStart }: TaskCardProps) {
 
   const handleStatusChange = async (newStatus: TaskStatus) => {
     try {
-      await moveTask(task.id, newStatus);
+      await updateTask(task.id, { status: newStatus });
     } catch (error) {
-      console.error('Failed to move task:', error);
+      console.error('Failed to update task status:', error);
     }
   };
 

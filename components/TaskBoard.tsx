@@ -19,7 +19,7 @@ const columns: { id: TaskStatus; title: string }[] = [
 export default function TaskBoard() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const { tasks, moveTask, fetchTasks, isLoading, error } = useTaskStore();
+  const { tasks, updateTask, fetchTasks, isLoading, error } = useTaskStore();
   // Состояние для отслеживания перетаскиваемой задачи
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
   // Состояние модального окна для новой задачи
@@ -70,14 +70,6 @@ export default function TaskBoard() {
     );
   }
 
-  // Добавляем логирование для отладки рендеринга
-  // console.log('Current tasks in TaskBoard:', tasks);
-  // console.log('Tasks by status:', {
-  //   TODO: tasks.filter(t => t.status === 'TODO'),
-  //   IN_PROGRESS: tasks.filter(t => t.status === 'IN_PROGRESS'),
-  //   DONE: tasks.filter(t => t.status === 'DONE')
-  // });
-
   // Обработчик начала перетаскивания
   const handleDragStart = (e: React.DragEvent, task: Task) => {
     setDraggedTask(task);
@@ -94,7 +86,7 @@ export default function TaskBoard() {
   const handleDrop = (e: React.DragEvent, status: TaskStatus) => {
     e.preventDefault();
     if (draggedTask) {
-      moveTask(draggedTask.id, status);
+      updateTask(draggedTask.id, { status });
       setDraggedTask(null);
     }
   };
@@ -136,16 +128,16 @@ export default function TaskBoard() {
               onDrop={(e) => handleDrop(e, column.id)}
             >
               {tasks
-                .filter((task: Task) => task.status === column.id && task.id)
-                .map((task: Task) => (
-                  <div key={task.id || `temp-${Math.random()}`}>
+                .filter((task) => task.status === column.id)
+                .map((task) => (
+                  <div key={task.id}>
                     <TaskCard
                       task={task}
-                      onEdit={(taskToEdit: Task) => {
+                      onEdit={(taskToEdit) => {
                         setEditingTask(taskToEdit);
                         setIsNewTaskModalOpen(true);
                       }}
-                      onDragStart={(e: React.DragEvent, task: Task) => handleDragStart(e, task)}
+                      onDragStart={(e, task) => handleDragStart(e, task)}
                     />
                   </div>
                 ))}

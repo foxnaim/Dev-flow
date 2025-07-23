@@ -19,6 +19,14 @@ const columns: { id: TaskStatus; title: string }[] = [
 export default function TaskBoard() {
   const { data: session, status } = useSession();
   const router = useRouter();
+
+  // DEBUG: выводим email и PROMO_FIT для отладки
+  const PROMO_FIT = process.env.NEXT_PUBLIC_PROMO_FIT?.split(',').map(e => e.trim().toLowerCase()) || [];
+  if (typeof window !== 'undefined') {
+    console.log('session.user.email:', session?.user?.email);
+    console.log('PROMO_FIT:', PROMO_FIT);
+    console.log('is PROMO_FIT:', session?.user?.email && PROMO_FIT.includes(session.user.email.toLowerCase()));
+  }
   const { tasks, updateTask, fetchTasks, isLoading, error } = useTaskStore();
   // Состояние для отслеживания перетаскиваемой задачи
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);

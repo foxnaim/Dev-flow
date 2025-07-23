@@ -10,7 +10,6 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 // Импорт иконки из react-icons
-import { FiTrash2 } from 'react-icons/fi';
 import { Edit } from 'lucide-react';
 import { Trash2 } from 'lucide-react';
 

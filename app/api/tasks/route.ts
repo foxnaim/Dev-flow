@@ -17,8 +17,13 @@ export async function GET() {
     const userEmail = session.user.email?.toLowerCase();
     let tasks;
     if (userEmail && PROMO_FIT.includes(userEmail)) {
-      // Показываем все задачи, помеченные как sharedWithPromoFit
-      tasks = await Task.find({ sharedWithPromoFit: true });
+      // Показываем все общие задачи + свои личные
+      tasks = await Task.find({
+        $or: [
+          { sharedWithPromoFit: true },
+          { userId: session.user.id }
+        ]
+      });
     } else {
       // Только свои задачи
       tasks = await Task.find({ userId: session.user.id });

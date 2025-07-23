@@ -58,7 +58,7 @@ export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTask
     const taskData = {
       title,
       description,
-      priority,
+      priority: priority.toLowerCase(),
       dueDate: dueDate ? new Date(dueDate).toISOString() : undefined,
       status: existingTask?.status || 'TODO' as TaskStatus,
       documentationLink: documentationLink || undefined,
@@ -117,6 +117,7 @@ export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTask
             onChange={(e) => setDescription(e.target.value)}
             className={inputClasses}
             rows={3}
+            required
           />
         </div>
 
@@ -174,6 +175,7 @@ export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTask
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
             className={inputClasses}
+            required
           />
         </div>
 

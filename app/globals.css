@@ -1,13 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 :root {
   /* Светлая тема */
   --background: #F9FAFB;
   --foreground: #111827;
   --surface: #FFFFFF;
-  --accent: #6366F1;
+  --accent: #F9A8D4;
   --secondary-text: #6B7280;
   --border: #E5E7EB;
   --error: #EF4444;
@@ -24,7 +23,7 @@
   --background: #1E1E2F;
   --foreground: #EDEDED;
   --surface: #2A2A40;
-  --accent: #7C3AED;
+  --accent: #EC4899;
   --secondary-text: #9CA3AF;
   --border: #2A2A40;
   --error: #EF4444;
@@ -37,7 +36,7 @@
 
 body {
   @apply text-foreground bg-background;
-  background: none;
+  background: #b8b2b6;
 }
 
 h1, h2, h3 {

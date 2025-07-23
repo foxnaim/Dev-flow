@@ -24,7 +24,9 @@ export const useTaskStore = create<TaskStore>((set) => ({
         throw new Error('Failed to fetch tasks');
       }
       const tasks = await response.json();
-      set({ tasks, isLoading: false });
+      // Маппинг _id -> id
+      const mappedTasks = tasks.map((task: any) => ({ ...task, id: task._id }));
+      set({ tasks: mappedTasks, isLoading: false });
     } catch (error) {
       set({ error: error instanceof Error ? error.message : 'An error occurred', isLoading: false });
     }
@@ -48,8 +50,9 @@ export const useTaskStore = create<TaskStore>((set) => ({
       }
 
       const newTask = await response.json();
+      // Маппинг _id -> id
       set((state) => ({
-        tasks: [...state.tasks, newTask],
+        tasks: [...state.tasks, { ...newTask, id: newTask._id }],
       }));
     } catch (error) {
       set({ error: error instanceof Error ? error.message : 'An error occurred' });
@@ -58,7 +61,12 @@ export const useTaskStore = create<TaskStore>((set) => ({
 
   updateTask: async (id, updatedTask) => {
     try {
-      const response = await fetch(`/api/tasks/${id}`, {
+      // Найти задачу по id в состоянии, чтобы получить _id
+      let realId = id;
+      const state = useTaskStore.getState();
+      const found = state.tasks.find((t) => t.id === id || t._id === id);
+      if (found && found._id) realId = found._id;
+      const response = await fetch(`/api/tasks/${realId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -73,7 +81,7 @@ export const useTaskStore = create<TaskStore>((set) => ({
       const updatedTaskData = await response.json();
       set((state) => ({
         tasks: state.tasks.map((task) =>
-          task.id === id ? updatedTaskData : task
+          task.id === id ? { ...updatedTaskData, id: updatedTaskData._id } : task
         ),
       }));
     } catch (error) {
@@ -83,7 +91,12 @@ export const useTaskStore = create<TaskStore>((set) => ({
 
   deleteTask: async (id) => {
     try {
-      const response = await fetch(`/api/tasks/${id}`, {
+      // Найти задачу по id в состоянии, чтобы получить _id
+      let realId = id;
+      const state = useTaskStore.getState();
+      const found = state.tasks.find((t) => t.id === id || t._id === id);
+      if (found && found._id) realId = found._id;
+      const response = await fetch(`/api/tasks/${realId}`, {
         method: 'DELETE',
       });
 

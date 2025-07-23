@@ -7,8 +7,7 @@ import {
   Code,
   FileText,
   Moon,
-  Sun,
-  MessageSquare,
+  Sun
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useTheme } from 'next-themes';
@@ -22,7 +21,6 @@ interface LayoutProps {
 // Навигационные элементы с иконками и метками
 const navItems = [
   { href: '/', icon: CheckSquare, label: 'Задачи' },
-  { href: '/chat', icon: MessageSquare, label: 'Чат' },
   { href: '/calendar', icon: Calendar, label: 'Календарь' },
   { href: '/notes', icon: FileText, label: 'Заметки' },
 ];

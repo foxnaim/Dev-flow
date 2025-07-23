@@ -23,7 +23,7 @@ export default function LoadingSpinner({ fullScreen = true, text = 'Loading...' 
 
   return (
     <div className="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center">
-      <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-lg">
+      <div className="bg-background dark:bg-slate-800 p-4 rounded-lg shadow-lg">
         {content}
       </div>
     </div>

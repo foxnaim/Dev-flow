@@ -14,17 +14,26 @@ export async function GET(req: NextRequest) {
   await connectDB();
 
   const { searchParams } = new URL(req.url);
-  const emailQuery = searchParams.get('email');
+  const query = searchParams.get('query');
 
-  if (!emailQuery) {
-    return NextResponse.json({ message: 'Email query is required' }, { status: 400 });
+  if (!query) {
+    return NextResponse.json({ message: 'Query is required' }, { status: 400 });
   }
 
   try {
     const users = await User.find({
-      email: { $regex: emailQuery, $options: 'i' },
-      _id: { $ne: session.user.id }, // Exclude the current user
-    }).select('-password -friendRequests -friends -createdAt -updatedAt'); // Exclude sensitive fields
+      $and: [
+        { _id: { $ne: session.user.id } },
+        {
+          $or: [
+            { email: { $regex: query, $options: 'i' } },
+            { username: { $regex: query, $options: 'i' } },
+            { firstName: { $regex: query, $options: 'i' } },
+            { lastName: { $regex: query, $options: 'i' } },
+          ]
+        }
+      ]
+    }).select('-password -friendRequests -friends -createdAt -updatedAt');
 
     return NextResponse.json(users);
   } catch (error) {

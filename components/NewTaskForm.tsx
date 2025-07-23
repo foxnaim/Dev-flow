@@ -60,7 +60,7 @@ export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTask
       title,
       description,
       priority: priority.toLowerCase() as 'high' | 'medium' | 'low',
-      dueDate: dueDate ? new Date(dueDate).toISOString() : undefined,
+      dueDate: dueDate ? new Date(dueDate).toISOString() : '',
       status: existingTask?.status || 'TODO' as TaskStatus,
       documentationLink: documentationLink || undefined,
       userId: session.user.id,

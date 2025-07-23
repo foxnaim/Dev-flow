@@ -90,9 +90,9 @@ export default function TaskCard({ task, onEdit, onDragStart }: TaskCardProps) {
           {task.title}
         </h3>
         <div className="flex space-x-2">
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(task.priority)}`}>
-            {task.priority === 'HIGH' ? 'Высокий' : 
-             task.priority === 'MEDIUM' ? 'Средний' : 'Низкий'}
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(task.priority.toUpperCase() as TaskPriority)}`}>
+            {task.priority === 'high' ? 'Высокий' : 
+             task.priority === 'medium' ? 'Средний' : 'Низкий'}
           </span>
           <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(task.status)}`}>
             {task.status === 'TODO' ? 'К выполнению' :
@@ -108,9 +108,9 @@ export default function TaskCard({ task, onEdit, onDragStart }: TaskCardProps) {
       )}
 
       <div className="flex flex-wrap gap-1 sm:gap-2 mb-2 sm:mb-4">
-        {task.tags && task.tags.length > 0 && (
+        {(task as any).tags && (task as any).tags.length > 0 && (
           <div className="flex flex-wrap gap-1">
-            {task.tags.map((tag) => (
+            {(task as any).tags.map((tag: string) => (
               <span key={`${task.id}-${tag}`} className="px-2 py-1 bg-pink-100 text-pink-800 text-xs rounded-full">
                 {tag}
               </span>
@@ -123,9 +123,9 @@ export default function TaskCard({ task, onEdit, onDragStart }: TaskCardProps) {
             Срок: {format(new Date(task.dueDate), 'dd.MM.yyyy', { locale: ru })}
           </span>
         )}
-        {task.documentationLink && (
+        {(task as any).documentationLink && (
           <a
-            href={task.documentationLink}
+            href={(task as any).documentationLink}
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm text-pink-600 dark:text-pink-400 hover:underline flex items-center gap-1"

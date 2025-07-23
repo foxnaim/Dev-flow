@@ -131,7 +131,7 @@ export default function TaskBoard() {
                 .filter((task) => task.status === column.id)
                 .map((task) => (
                   <TaskCard
-                    key={task.id || task._id}
+                    key={task.id}
                     task={task}
                     onEdit={(taskToEdit) => {
                       setEditingTask(taskToEdit);

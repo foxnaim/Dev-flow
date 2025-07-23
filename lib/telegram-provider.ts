@@ -1,4 +1,25 @@
-import type { OAuthConfig, OAuthUserConfig } from "next-auth/providers";
+// Типы определены локально, чтобы избежать ошибки импорта
+export interface OAuthConfig<T> {
+  id: string;
+  name: string;
+  type: string;
+  version?: string;
+  scope?: string;
+  params?: Record<string, any>;
+  accessTokenUrl?: string;
+  requestTokenUrl?: string;
+  authorizationUrl?: string;
+  profileUrl?: string;
+  profile?: (profile: T) => any;
+  clientId?: string;
+  clientSecret?: string;
+  protection?: string;
+}
+export interface OAuthUserConfig<T> {
+  clientId: string;
+  clientSecret: string;
+  profile?: (profile: T) => any;
+}
 
 export interface TelegramProfile {
   id: string;
@@ -19,57 +40,7 @@ export default function TelegramProvider<P extends TelegramProfile>(
     id: "telegram",
     name: "Telegram",
     type: "oauth",
-    authorization: {
-      url: "https://oauth.telegram.org/auth",
-      params: {
-        bot_id: options.clientId,
-        origin: baseUrl,
-        return_to: `${baseUrl}/api/auth/callback/telegram`,
-        request_access: "write",
-      },
-    },
-    token: {
-      url: "https://oauth.telegram.org/access_token",
-      async request({ client, params, checks, provider }) {
-        const response = await fetch(provider.token.url as string, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            client_id: options.clientId,
-            client_secret: options.clientSecret,
-            code: params.code,
-            grant_type: "authorization_code",
-            redirect_uri: `${baseUrl}/api/auth/callback/telegram`,
-          }),
-        });
-
-        const tokens = await response.json();
-        return { tokens };
-      },
-    },
-    userinfo: {
-      url: `https://api.telegram.org/bot${options.clientSecret}/getMe`,
-      async request({ tokens, provider }) {
-        const response = await fetch(
-          `https://api.telegram.org/bot${options.clientSecret}/getMe`
-        );
-        const data = await response.json();
-        
-        if (!data.ok) {
-          throw new Error("Failed to fetch user info from Telegram");
-        }
-
-        return {
-          id: data.result.id.toString(),
-          first_name: data.result.first_name,
-          last_name: data.result.last_name,
-          username: data.result.username,
-          photo_url: data.result.photo_url,
-        };
-      },
-    },
+    authorizationUrl: "https://oauth.telegram.org/auth",
     profile(profile) {
       return {
         id: profile.id,
@@ -78,6 +49,5 @@ export default function TelegramProvider<P extends TelegramProfile>(
         image: profile.photo_url,
       };
     },
-    options,
   };
 } 

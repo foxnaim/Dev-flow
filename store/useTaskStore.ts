@@ -64,8 +64,8 @@ export const useTaskStore = create<TaskStore>((set) => ({
       // Найти задачу по id в состоянии, чтобы получить _id
       let realId = id;
       const state = useTaskStore.getState();
-      const found = state.tasks.find((t) => t.id === id || t._id === id);
-      if (found && found._id) realId = found._id;
+      const found = state.tasks.find((t) => t.id === id);
+      // realId всегда равен id, так как _id не используется в типе Task
       const response = await fetch(`/api/tasks/${realId}`, {
         method: 'PATCH',
         headers: {
@@ -94,8 +94,8 @@ export const useTaskStore = create<TaskStore>((set) => ({
       // Найти задачу по id в состоянии, чтобы получить _id
       let realId = id;
       const state = useTaskStore.getState();
-      const found = state.tasks.find((t) => t.id === id || t._id === id);
-      if (found && found._id) realId = found._id;
+      const found = state.tasks.find((t) => t.id === id);
+      // realId всегда равен id, так как _id не используется в типе Task
       const response = await fetch(`/api/tasks/${realId}`, {
         method: 'DELETE',
       });

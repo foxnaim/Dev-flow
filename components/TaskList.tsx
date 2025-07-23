@@ -125,16 +125,16 @@ export default function TaskList() {
             <p className="text-slate-300">
               <strong>Статус:</strong> {selectedTask.status}
             </p>
-            {selectedTask.documentationLink && (
+            {(selectedTask as any).documentationLink && (
               <p className="break-words text-slate-300">
                 <strong>Документация:</strong>{' '}
                 <a 
-                  href={selectedTask.documentationLink} 
-                  target="_blank" 
+                  href={(selectedTask as any).documentationLink}
+                  target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-400 hover:text-blue-300"
+                  className="text-blue-400 hover:underline"
                 >
-                  {selectedTask.documentationLink}
+                  {(selectedTask as any).documentationLink}
                 </a>
               </p>
             )}

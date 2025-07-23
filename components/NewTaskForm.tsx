@@ -38,10 +38,11 @@ export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTask
     if (existingTask) {
       setTitle(existingTask.title);
       setDescription(existingTask.description || '');
-      setPriority(existingTask.priority);
+      // Преобразуем 'high'|'medium'|'low' в 'HIGH'|'MEDIUM'|'LOW'
+      setPriority(existingTask.priority.toUpperCase() as TaskPriority);
       setDueDate(existingTask.dueDate ? new Date(existingTask.dueDate).toISOString().split('T')[0] : '');
-      setDocumentationLink(existingTask.documentationLink || '');
-      setTags(existingTask.tags?.join(', ') || '');
+      setDocumentationLink((existingTask as any).documentationLink || '');
+      setTags(((existingTask as any).tags || []).join(', '));
     }
   }, [existingTask]);
 
@@ -58,7 +59,7 @@ export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTask
     const taskData = {
       title,
       description,
-      priority: priority.toLowerCase(),
+      priority: priority.toLowerCase() as 'high' | 'medium' | 'low',
       dueDate: dueDate ? new Date(dueDate).toISOString() : undefined,
       status: existingTask?.status || 'TODO' as TaskStatus,
       documentationLink: documentationLink || undefined,

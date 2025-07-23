@@ -162,27 +162,3 @@ h1, h2, h3 {
 .rbc-date-cell:last-child {
   border-right: none;
 }
-
-.rbc-date-cell:parent > .rbc-row-segment > .rbc-event-content {
-    /* Стили для контента события внутри ячейки даты, если нужно */
-}
-
-.rbc-week-bg {
-    /* Фон недели */
-}
-
-.rbc-axis-c, .rbc-axis-c > a {
-    /* Стили для временной оси */
-}
-
-.rbc-time-column .rbc-timeslots-group {
-    /* Группы временных слотов */
-}
-
-.rbc-time-gutter, .rbc-header-gutter {
-    /* Пространство для временной оси и заголовка */
-}
-
-.rbc-rtl {
-    /* Стили для RTL */
-}

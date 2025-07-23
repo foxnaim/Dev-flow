@@ -13,7 +13,16 @@ export async function GET() {
     }
 
     await connectDB();
-    const tasks = await Task.find({ userId: session.user.id });
+    const PROMO_FIT = process.env.NEXT_PUBLIC_PROMO_FIT?.split(',').map(e => e.trim().toLowerCase()) || [];
+    const userEmail = session.user.email?.toLowerCase();
+    let tasks;
+    if (userEmail && PROMO_FIT.includes(userEmail)) {
+      // Показываем все задачи, помеченные как sharedWithPromoFit
+      tasks = await Task.find({ sharedWithPromoFit: true });
+    } else {
+      // Только свои задачи
+      tasks = await Task.find({ userId: session.user.id });
+    }
     return NextResponse.json(tasks);
   } catch (error) {
     console.error('Error fetching tasks:', error);
@@ -32,9 +41,14 @@ export async function POST(request: Request) {
     const body = await request.json();
     await connectDB();
 
+    const PROMO_FIT = process.env.NEXT_PUBLIC_PROMO_FIT?.split(',').map(e => e.trim().toLowerCase()) || [];
+    const userEmail = session.user.email?.toLowerCase();
+    const sharedWithPromoFit = userEmail && PROMO_FIT.includes(userEmail);
+
     const task = await Task.create({
       ...body,
       userId: session.user.id,
+      sharedWithPromoFit,
     });
 
     return NextResponse.json(task);

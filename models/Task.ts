@@ -35,6 +35,10 @@ const taskSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  sharedWithPromoFit: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 export default mongoose.models.Task || mongoose.model('Task', taskSchema); 

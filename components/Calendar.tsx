@@ -144,13 +144,6 @@ export const Calendar: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="absolute bottom-0.5 right-0.5 w-5 h-5 sm:w-6 sm:h-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <Plus className="w-3 h-3" />
-                  </Button>
                 </div>
               );
             })}

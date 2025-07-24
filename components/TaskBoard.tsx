@@ -16,7 +16,11 @@ const columns: { id: TaskStatus; title: string }[] = [
   { id: 'DONE', title: 'Выполнено' }
 ];
 
-export default function TaskBoard() {
+interface TaskBoardProps {
+  onModalStateChange?: (open: boolean) => void;
+}
+
+export default function TaskBoard({ onModalStateChange }: TaskBoardProps) {
   const { data: session, status } = useSession();
   const router = useRouter();
 

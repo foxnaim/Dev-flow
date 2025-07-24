@@ -103,18 +103,20 @@ export default function TaskCard({ task, onEdit, onDragStart }: TaskCardProps) {
   return (
     <div className="bg-background dark:bg-slate-800 rounded-lg shadow-sm p-2 sm:p-4" draggable onDragStart={(e) => onDragStart(e, task)}>
       <div className="flex justify-between items-start mb-2 sm:mb-4">
-        <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white break-words">
-          {task.title}
-        </h3>
-        <div className="flex space-x-2">
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(task.priority.toUpperCase() as TaskPriority)}`}>
-            {task.priority === 'high' ? 'Высокий' : 
-             task.priority === 'medium' ? 'Средний' : 'Низкий'}
-          </span>
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(task.status)}`}>
-            {task.status === 'TODO' ? 'К выполнению' :
-             task.status === 'IN_PROGRESS' ? 'В процессе' : 'Выполнено'}
-          </span>
+        <div className="flex flex-wrap gap-2 items-start w-full">
+          <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white break-words whitespace-normal w-0 min-w-0 flex-1">
+            {task.title}
+          </h3>
+          <div className="flex space-x-2">
+            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(task.priority.toUpperCase() as TaskPriority)}`}>
+              {task.priority === 'high' ? 'Высокий' : 
+               task.priority === 'medium' ? 'Средний' : 'Низкий'}
+            </span>
+            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(task.status)}`}>
+              {task.status === 'TODO' ? 'К выполнению' :
+               task.status === 'IN_PROGRESS' ? 'В процессе' : 'Выполнено'}
+            </span>
+          </div>
         </div>
       </div>
 

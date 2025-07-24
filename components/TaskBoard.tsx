@@ -115,13 +115,15 @@ export default function TaskBoard() {
       </div>
 
       {/* Плавающая кнопка для мобильных */}
-      <button
-        onClick={() => setIsNewTaskModalOpen(true)}
-        className="fixed bottom-24 right-4 z-50 block md:hidden bg-accent text-white rounded-full shadow-lg w-16 h-16 flex items-center justify-center text-3xl focus:outline-none"
-        aria-label="Создать новую задачу"
-      >
-        <Plus className="w-8 h-8" />
-      </button>
+      { !isNewTaskModalOpen && (
+        <button
+          onClick={() => setIsNewTaskModalOpen(true)}
+          className="fixed bottom-24 right-4 z-50 block md:hidden bg-accent text-white rounded-full shadow-lg w-16 h-16 flex items-center justify-center text-3xl focus:outline-none"
+          aria-label="Создать новую задачу"
+        >
+          <Plus className="w-8 h-8" />
+        </button>
+      )}
 
       {/* Сетка колонок для задач */}
       <div className="flex flex-col md:flex-row gap-2 md:gap-4 p-2 md:p-4 overflow-x-auto">

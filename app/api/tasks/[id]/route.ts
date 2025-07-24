@@ -106,17 +106,35 @@ export async function PATCH(
     const body = await request.json();
     await connectDB();
 
-    const task = await Task.findOneAndUpdate(
-      { _id: params.id, userId: session.user.id },
-      { $set: body },
-      { new: true }
-    );
-
+    // Получаем задачу
+    const task = await Task.findById(params.id);
     if (!task) {
       return new NextResponse('Task not found', { status: 404 });
     }
 
-    return NextResponse.json(task);
+    // Проверяем доступ: владелец или PROMO_FIT
+    const PROMO_FIT = process.env.NEXT_PUBLIC_PROMO_FIT?.split(',').map(e => e.trim().toLowerCase()) || [];
+    const userEmail = session.user.email?.toLowerCase();
+    const isPromoFit = userEmail && PROMO_FIT.includes(userEmail);
+    const isOwner = task.userId === session.user.id;
+    const isSharedPromoFit = task.sharedWithPromoFit === true;
+
+    if (!(isOwner || (isPromoFit && isSharedPromoFit))) {
+      return new NextResponse('Forbidden', { status: 403 });
+    }
+
+    // Обновляем задачу
+    const updatedTask = await Task.findOneAndUpdate(
+      { _id: params.id },
+      { $set: body },
+      { new: true }
+    );
+
+    if (!updatedTask) {
+      return new NextResponse('Task not found', { status: 404 });
+    }
+
+    return NextResponse.json(updatedTask);
   } catch (error) {
     console.error('Error updating task:', error);
     return new NextResponse('Internal Server Error', { status: 500 });

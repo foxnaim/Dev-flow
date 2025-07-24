@@ -138,15 +138,16 @@ export default function TaskBoard() {
               {tasks
                 .filter((task) => task.status === column.id)
                 .map((task) => (
-                  <TaskCard
-                    key={task.id}
-                    task={task}
-                    onEdit={(taskToEdit) => {
-                      setEditingTask(taskToEdit);
-                      setIsNewTaskModalOpen(true);
-                    }}
-                    onDragStart={(e, task) => handleDragStart(e, task)}
-                  />
+                  <div key={task.id} className="mb-4">
+                    <TaskCard
+                      task={task}
+                      onEdit={(taskToEdit) => {
+                        setEditingTask(taskToEdit);
+                        setIsNewTaskModalOpen(true);
+                      }}
+                      onDragStart={(e, task) => handleDragStart(e, task)}
+                    />
+                  </div>
                 ))}
             </div>
           </motion.div>

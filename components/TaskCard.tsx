@@ -174,30 +174,33 @@ export default function TaskCard({ task, onEdit, onDragStart }: TaskCardProps) {
             >
               <Edit className="w-4 h-4 mr-2" /> Редактировать
             </button>
-            {task.status !== 'TODO' && (
-              <button
-                onClick={() => handleStatusChangeInMenu('TODO')}
-                className="flex items-center w-full px-4 py-2 text-sm text-pink-600 hover:bg-gray-100 dark:text-pink-400 dark:hover:bg-slate-600"
-              >
-                К выполнению
-              </button>
-            )}
-            {task.status !== 'IN_PROGRESS' && (
-              <button
-                onClick={() => handleStatusChangeInMenu('IN_PROGRESS')}
-                className="flex items-center w-full px-4 py-2 text-sm text-yellow-600 hover:bg-gray-100 dark:text-yellow-400 dark:hover:bg-slate-600"
-              >
-                В процессе
-              </button>
-            )}
-            {task.status !== 'DONE' && (
-              <button
-                onClick={() => handleStatusChangeInMenu('DONE')}
-                className="flex items-center w-full px-4 py-2 text-sm text-green-600 hover:bg-gray-100 dark:text-green-400 dark:hover:bg-slate-600"
-              >
-                Выполнено
-              </button>
-            )}
+            {/* Статусы только на мобильных и планшетах */}
+            <div className="block md:hidden">
+              {task.status !== 'TODO' && (
+                <button
+                  onClick={() => handleStatusChangeInMenu('TODO')}
+                  className="flex items-center w-full px-4 py-2 text-sm text-pink-600 hover:bg-gray-100 dark:text-pink-400 dark:hover:bg-slate-600"
+                >
+                  К выполнению
+                </button>
+              )}
+              {task.status !== 'IN_PROGRESS' && (
+                <button
+                  onClick={() => handleStatusChangeInMenu('IN_PROGRESS')}
+                  className="flex items-center w-full px-4 py-2 text-sm text-yellow-600 hover:bg-gray-100 dark:text-yellow-400 dark:hover:bg-slate-600"
+                >
+                  В процессе
+                </button>
+              )}
+              {task.status !== 'DONE' && (
+                <button
+                  onClick={() => handleStatusChangeInMenu('DONE')}
+                  className="flex items-center w-full px-4 py-2 text-sm text-green-600 hover:bg-gray-100 dark:text-green-400 dark:hover:bg-slate-600"
+                >
+                  Выполнено
+                </button>
+              )}
+            </div>
             <button
               onClick={handleDeleteClick}
               className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:text-red-400 dark:hover:bg-slate-600"

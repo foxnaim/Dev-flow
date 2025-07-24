@@ -14,11 +14,14 @@ interface TaskCardProps {
 export default function TaskCard({ task, onEdit, onDragStart }: TaskCardProps) {
   const { updateTask, deleteTask } = useTaskStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [menuPosition, setMenuPosition] = useState<'down' | 'up'>('down');
   const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node) &&
+          buttonRef.current && !buttonRef.current.contains(event.target as Node)) {
         setIsMenuOpen(false);
       }
     };
@@ -27,6 +30,20 @@ export default function TaskCard({ task, onEdit, onDragStart }: TaskCardProps) {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    if (isMenuOpen && buttonRef.current && menuRef.current) {
+      const buttonRect = buttonRef.current.getBoundingClientRect();
+      const menuHeight = menuRef.current.offsetHeight;
+      const spaceBelow = window.innerHeight - buttonRect.bottom;
+      const spaceAbove = buttonRect.top;
+      if (spaceBelow < menuHeight && spaceAbove > menuHeight) {
+        setMenuPosition('up');
+      } else {
+        setMenuPosition('down');
+      }
+    }
+  }, [isMenuOpen]);
 
   const handleEditClick = () => {
     onEdit(task);
@@ -136,8 +153,9 @@ export default function TaskCard({ task, onEdit, onDragStart }: TaskCardProps) {
         )}
       </div>
 
-      <div className="flex justify-end relative" ref={menuRef}>
+      <div className="flex justify-end relative">
         <button
+          ref={buttonRef}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="p-1 rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-slate-700 focus:outline-none"
         >
@@ -145,7 +163,11 @@ export default function TaskCard({ task, onEdit, onDragStart }: TaskCardProps) {
         </button>
 
         {isMenuOpen && (
-          <div className="absolute right-0 left-auto w-48 mt-2 bg-white dark:bg-slate-700 rounded-md shadow-lg z-10 py-1 whitespace-nowrap">
+          <div
+            ref={menuRef}
+            className={`absolute right-0 left-auto w-48 mt-2 bg-white dark:bg-slate-700 rounded-md shadow-lg z-10 py-1 whitespace-nowrap
+              ${menuPosition === 'up' ? 'bottom-full mb-2' : 'top-full mt-2'}`}
+          >
             <button
               onClick={handleEditClick}
               className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600"

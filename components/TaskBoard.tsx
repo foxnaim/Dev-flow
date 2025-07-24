@@ -106,24 +106,19 @@ export default function TaskBoard() {
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-4 sm:mb-6">
         <h1 className="text-xl sm:text-2xl font-bold text-foreground">DevFlow</h1>
         <button
-          onClick={() => setIsNewTaskModalOpen(true)}
-          className="hidden md:flex items-center px-4 sm:px-6 py-2 rounded-full border border-accent bg-surface text-accent font-medium shadow-md hover:bg-accent/10 transition-colors duration-200 focus:outline-none text-sm sm:text-base"
+          onClick={() => {
+            setIsNewTaskModalOpen(true);
+            if (typeof onModalStateChange === 'function') onModalStateChange(true);
+          }}
+          className="flex items-center px-4 sm:px-6 py-2 rounded-full border border-accent bg-surface text-accent font-medium shadow-md hover:bg-accent/10 transition-colors duration-200 focus:outline-none text-sm sm:text-base"
         >
           <Plus className="w-5 h-5 mr-2" />
           Новая задача
         </button>
       </div>
 
-      {/* Плавающая кнопка для мобильных */}
-      { !isNewTaskModalOpen && (
-        <button
-          onClick={() => setIsNewTaskModalOpen(true)}
-          className="fixed bottom-24 right-4 z-50 block md:hidden bg-accent text-white rounded-full shadow-lg w-16 h-16 flex items-center justify-center text-3xl focus:outline-none"
-          aria-label="Создать новую задачу"
-        >
-          <Plus className="w-8 h-8" />
-        </button>
-      )}
+      {/* Удалить плавающую кнопку для мобильных */}
+      {/* (больше не нужно) */}
 
       {/* Сетка колонок для задач */}
       <div className="flex flex-col md:flex-row gap-2 md:gap-4 p-2 md:p-4 overflow-x-auto">
@@ -163,11 +158,17 @@ export default function TaskBoard() {
       {/* Модальное окно для новой задачи */}
       <Modal
         isOpen={isNewTaskModalOpen}
-        onClose={handleTaskFormClose}
+        onClose={() => {
+          setIsNewTaskModalOpen(false);
+          if (typeof onModalStateChange === 'function') onModalStateChange(false);
+        }}
         title={editingTask ? 'Редактировать задачу' : 'Новая задача'}
       >
         <NewTaskForm 
-          onClose={handleTaskFormClose}
+          onClose={() => {
+            setIsNewTaskModalOpen(false);
+            if (typeof onModalStateChange === 'function') onModalStateChange(false);
+          }}
           existingTask={editingTask || undefined}
         />
       </Modal>

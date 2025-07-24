@@ -29,6 +29,7 @@ export default function Layout({ children }: LayoutProps) {
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
+  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
 
   // Предотвращаем гидратацию с неправильной темой
   useEffect(() => {
@@ -49,12 +50,15 @@ export default function Layout({ children }: LayoutProps) {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
         >
-          {children}
+          {React.cloneElement(children as React.ReactElement, {
+            onModalStateChange: setIsTaskModalOpen
+          })}
         </motion.main>
       </AnimatePresence>
 
       {/* Нижняя навигационная панель */}
-      <nav className="fixed bottom-7 left-1/2 -translate-x-1/2 border border-border bg-surface text-foreground rounded-full px-6 py-3 flex justify-around items-center gap-6 z-50 shadow-lg w-[calc(100%-2rem)] max-w-sm">
+      {!isTaskModalOpen && (
+        <nav className="fixed bottom-7 left-1/2 -translate-x-1/2 border border-border bg-surface text-foreground rounded-full px-6 py-3 flex justify-around items-center gap-6 z-50 shadow-lg w-[calc(100%-2rem)] max-w-sm">
         {/* Навигационные ссылки */}
         {navItems.map((item) => (
           <Link
@@ -85,6 +89,7 @@ export default function Layout({ children }: LayoutProps) {
           )}
         </button>
       </nav>
+      )}
     </div>
   );
 }

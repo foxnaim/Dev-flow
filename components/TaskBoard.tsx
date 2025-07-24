@@ -107,18 +107,18 @@ export default function TaskBoard({ onModalStateChange }: TaskBoardProps) {
   return (
     <div className="p-2 sm:p-6">
       {/* Заголовок доски и кнопка добавления задачи */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold text-foreground">DevFlow</h1>
+      <div className="flex flex-row items-center gap-2 mb-4 sm:mb-6">
         <button
           onClick={() => {
             setIsNewTaskModalOpen(true);
             if (typeof onModalStateChange === 'function') onModalStateChange(true);
           }}
-          className="flex items-center px-4 sm:px-6 py-2 rounded-full border border-accent bg-surface text-accent font-medium shadow-md hover:bg-accent/10 transition-colors duration-200 focus:outline-none text-sm sm:text-base"
+          className="flex items-center justify-center w-10 h-10 rounded-full bg-accent text-white shadow-md hover:bg-accent/90 transition-colors duration-200 focus:outline-none"
+          aria-label="Создать новую задачу"
         >
-          <Plus className="w-5 h-5 mr-2" />
-          Новая задача
+          <Plus className="w-5 h-5" />
         </button>
+        <h1 className="text-xl sm:text-2xl font-bold text-foreground">DevFlow</h1>
       </div>
 
       {/* Удалить плавающую кнопку для мобильных */}

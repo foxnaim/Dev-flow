@@ -77,12 +77,26 @@ export async function DELETE(
     }
 
     await connectDB();
-    const task = await Task.findOneAndDelete({
-      _id: params.id,
-      userId: session.user.id,
-    });
-
+    // Получаем задачу
+    const task = await Task.findById(params.id);
     if (!task) {
+      return new NextResponse('Task not found', { status: 404 });
+    }
+
+    // Проверяем доступ: владелец или PROMO_FIT
+    const PROMO_FIT = process.env.NEXT_PUBLIC_PROMO_FIT?.split(',').map(e => e.trim().toLowerCase()) || [];
+    const userEmail = session.user.email?.toLowerCase();
+    const isPromoFit = userEmail && PROMO_FIT.includes(userEmail);
+    const isOwner = task.userId === session.user.id;
+    const isSharedPromoFit = task.sharedWithPromoFit === true;
+
+    if (!(isOwner || (isPromoFit && isSharedPromoFit))) {
+      return new NextResponse('Forbidden', { status: 403 });
+    }
+
+    // Удаляем задачу
+    const deletedTask = await Task.findOneAndDelete({ _id: params.id });
+    if (!deletedTask) {
       return new NextResponse('Task not found', { status: 404 });
     }
 

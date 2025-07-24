@@ -37,7 +37,7 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <div className="p-4 max-h-[90vh] overflow-y-auto">
+            <div className="p-4 md:pt-4 pt-0 max-h-[90vh] overflow-y-auto">
               {children}
             </div>
           </motion.div>

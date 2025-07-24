@@ -145,7 +145,7 @@ export default function TaskCard({ task, onEdit, onDragStart }: TaskCardProps) {
         </button>
 
         {isMenuOpen && (
-          <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-700 rounded-md shadow-lg z-10 py-1">
+          <div className="absolute right-0 left-auto md:left-auto md:right-0 w-48 max-w-xs md:max-w-sm overflow-x-auto md:translate-x-0 translate-x-0 mt-2 bg-white dark:bg-slate-700 rounded-md shadow-lg z-10 py-1">
             <button
               onClick={handleEditClick}
               className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600"

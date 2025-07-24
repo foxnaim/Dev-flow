@@ -93,7 +93,7 @@ export default function NewTaskForm({ onSubmit, onClose, existingTask }: NewTask
   return (
     <>
       
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4 block md:pb-4 pb-24">
         <div>
           <label htmlFor="title" className="block text-sm font-medium text-muted mb-1">
             Название

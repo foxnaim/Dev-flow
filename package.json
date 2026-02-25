@@ -22,7 +22,7 @@
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
     "framer-motion": "^12.16.0",
-    "lru-cache": "7.18.3",
+    "lru-cache": "11.2.6",
     "lucide-react": "^0.511.0",
     "mongodb": "^6.17.0",
     "mongoose": "^8.15.1",

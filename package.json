@@ -20,7 +20,7 @@
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
-    "dayjs": "^1.11.13",
+    "dayjs": "^1.11.19",
     "framer-motion": "^12.16.0",
     "lru-cache": "7.18.3",
     "lucide-react": "^0.511.0",

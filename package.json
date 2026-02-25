@@ -23,7 +23,7 @@
     "dayjs": "^1.11.13",
     "framer-motion": "^12.16.0",
     "lru-cache": "7.18.3",
-    "lucide-react": "^0.511.0",
+    "lucide-react": "^0.575.0",
     "mongodb": "^6.17.0",
     "mongoose": "^8.15.1",
     "next": "14.1.0",
